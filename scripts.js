@@ -1,21 +1,36 @@
-// 模擬加密幣資料
+// 即時代幣排行資料
 const coins = [
-  { name: 'Bitcoin', symbol: 'BTC', volume: '$28.97B', change: '+4.2%' },
-  { name: 'Ethereum', symbol: 'ETH', volume: '$16.55B', change: '+3.7%' },
-  { name: 'Solana', symbol: 'SOL', volume: '$4.89B', change: '+6.1%' },
+  { name: 'Bitcoin', symbol: 'BTC', volume: '$30.1B', change: '+4.2%' },
+  { name: 'Ethereum', symbol: 'ETH', volume: '$18.3B', change: '+3.5%' },
+  { name: 'Solana', symbol: 'SOL', volume: '$5.8B', change: '+6.1%' },
 ];
 
-const container = document.getElementById('top-coins');
-coins.forEach((coin) => {
+const topContainer = document.getElementById('top-coins');
+coins.forEach(coin => {
   const div = document.createElement('div');
   div.className = 'card';
-  div.innerHTML = `<h3 class="text-xl font-bold text-yellow-300">${coin.name} (${coin.symbol})</h3>
+  div.innerHTML = `<h3 class="text-xl text-yellow-300 font-bold">${coin.name} (${coin.symbol})</h3>
                    <p>24h Volume: ${coin.volume}</p>
                    <p class="text-green-400">${coin.change}</p>`;
-  container.appendChild(div);
+  topContainer.appendChild(div);
 });
 
-// 粒子動畫腳本
+// AI 推薦模組資料
+const recommended = [
+  { name: 'Avalanche', symbol: 'AVAX', insight: '速度快、漲幅穩定，適合短期關注' },
+  { name: 'Toncoin', symbol: 'TON', insight: '社群熱度上升，突破平均價位' }
+];
+
+const recoContainer = document.getElementById('recommended-coins');
+recommended.forEach(token => {
+  const div = document.createElement('div');
+  div.className = 'recommend-card';
+  div.innerHTML = `<h3 class="text-lg text-cyan-300 font-bold">${token.name} (${token.symbol})</h3>
+                   <p class="mt-1 text-gray-300">${token.insight}</p>`;
+  recoContainer.appendChild(div);
+});
+
+// 粒子動畫效果
 const canvas = document.getElementById('particles-bg');
 const ctx = canvas.getContext('2d');
 let particlesArray = [];
@@ -46,14 +61,17 @@ class Particle {
 
 function initParticles() {
   particlesArray = [];
-  for (let i = 0; i < 120; i++) {
+  for (let i = 0; i < 100; i++) {
     particlesArray.push(new Particle());
   }
 }
 
 function animateParticles() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  particlesArray.forEach(p => { p.update(); p.draw(); });
+  particlesArray.forEach(p => {
+    p.update();
+    p.draw();
+  });
   requestAnimationFrame(animateParticles);
 }
 
