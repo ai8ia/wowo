@@ -1,19 +1,30 @@
 // 即時代幣排行資料
-const coins = [
-  { name: 'Bitcoin', symbol: 'BTC', volume: '$30.1B', change: '+4.2%' },
-  { name: 'Ethereum', symbol: 'ETH', volume: '$18.3B', change: '+3.5%' },
-  { name: 'Solana', symbol: 'SOL', volume: '$5.8B', change: '+6.1%' },
-];
-
 const topContainer = document.getElementById('top-coins');
-coins.forEach(coin => {
-  const div = document.createElement('div');
-  div.className = 'card';
-  div.innerHTML = `<h3 class="text-xl text-yellow-300 font-bold">${coin.name} (${coin.symbol})</h3>
-                   <p>24h Volume: ${coin.volume}</p>
-                   <p class="text-green-400">${coin.change}</p>`;
-  topContainer.appendChild(div);
-});
+
+async function loadTopCoins() {
+  try {
+    const res = await fetch('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=volume_desc&per_page=6&page=1&sparkline=false');
+    const coins = await res.json();
+
+    coins.forEach(coin => {
+      const div = document.createElement('div');
+      div.className = 'card';
+      div.innerHTML = `
+        <h3 class="text-xl font-bold text-yellow-300">${coin.name} (${coin.symbol.toUpperCase()})</h3>
+        <p>Price: $${coin.current_price.toLocaleString()}</p>
+        <p>24h Volume: $${coin.total_volume.toLocaleString()}</p>
+        <p class="${coin.price_change_percentage_24h >= 0 ? 'text-green-400' : 'text-red-400'}">
+          ${coin.price_change_percentage_24h.toFixed(2)}%
+        </p>
+      `;
+      topContainer.appendChild(div);
+    });
+  } catch (error) {
+    topContainer.innerHTML = '<p class="text-red-400">⚠️ 無法載入即時資料。</p>';
+  }
+}
+
+loadTopCoins();
 
 // AI 推薦模組資料
 const recommended = [
