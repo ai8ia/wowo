@@ -18,6 +18,23 @@ body {
 }
 
 .card {
+  position: relative; /* 必要讓角標定位成功 */
+  ...
+}
+
+.trend-score {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: #00ffcc;
+  color: #000;
+  font-size: 12px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-weight: bold;
+}
+
+.card {
   background-color: #1c1c2b;
   border: 1px solid rgba(255, 255, 255, 0.05);
   border-radius: 12px;
