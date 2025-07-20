@@ -1,43 +1,43 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ai-ia.win｜用 AI 贏未來</title>
-  <link href="styles.css" rel="stylesheet" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MCP 控制台 | ai-ia.win</title>
+  <link rel="stylesheet" href="styles.css">
   <script src="scripts.js" defer></script>
 </head>
-<body class="bg-gray-900 text-white font-sans overflow-hidden relative">
-  <canvas id="particles-bg"></canvas>
-
-  <header class="text-center py-10 relative z-10">
-    <h1 class="text-4xl font-bold text-yellow-400 tracking-wide">ai-ia.win</h1>
-    <p class="text-lg text-gray-300 mt-2">MCP 品牌入口｜用 AI 贏未來</p>
+<body class="bg-gray-950 text-white font-sans">
+  <header class="p-6 text-center border-b border-gray-800">
+    <h1 class="text-3xl font-bold text-yellow-400 tracking-wide">📊 MCP 控制台</h1>
+    <p class="text-sm text-gray-400 mt-2">用 AI 分析代幣熱度｜監控 Web3 趨勢</p>
   </header>
 
-  <main class="max-w-6xl mx-auto px-4 relative z-10">
-    <section class="mb-10">
-      <h2 class="text-xl font-bold text-cyan-300">🔥 即時排行</h2>
-      <div id="top-coins" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
-    </section>
-
-    <section class="mb-10">
-      <h2 class="text-xl font-bold text-purple-300">🧠 AI 推薦模組</h2>
-      <div id="recommended-coins" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
-    </section>
-
-    <section class="mb-10">
-      <h2 class="text-xl font-bold text-orange-300">📊 MCP 分析區</h2>
-      <div class="grid gap-4">
-        <div class="card">🌱 成本結構分析：每份 NT$3 → 原料＋包裝＋製程</div>
-        <div class="card">⚡ AI 組合推薦：依據客戶行為生成最佳品項</div>
-        <div class="card">📈 庫存流動分析：即時判斷滯銷與爆品</div>
+  <main class="max-w-6xl mx-auto px-4 py-6">
+    <!-- 功能篩選區 -->
+    <section class="mb-6">
+      <div class="flex flex-wrap gap-4 justify-center text-sm text-gray-300">
+        <button class="filter-tab active">24h Volume</button>
+        <button class="filter-tab">Top Gainers</button>
+        <button class="filter-tab">Top Losers</button>
+        <select id="chain-select" class="bg-gray-800 text-white p-2 rounded">
+          <option value="all">🌐 所有鏈</option>
+          <option value="ethereum">Ethereum</option>
+          <option value="solana">Solana</option>
+        </select>
+        <input type="text" id="token-search" placeholder="🔎 搜尋代幣或合約地址" class="bg-gray-800 text-sm px-3 py-2 rounded w-60">
+        <button id="add-pair" class="bg-yellow-400 text-black px-3 py-2 rounded">＋ Add Pair</button>
       </div>
+    </section>
+
+    <!-- 代幣卡片模組 -->
+    <section>
+      <div id="token-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
     </section>
   </main>
 
-  <footer class="text-center text-gray-500 py-6 text-sm border-t border-gray-700 mt-10 relative z-10">
-    © 2025 ai-ia.win. All Rights Reserved.
+  <footer class="text-center text-gray-600 text-xs py-4 border-t border-gray-800">
+    MCP 控制台 © 2025. Powered by ai-ia.win
   </footer>
 </body>
 </html>
