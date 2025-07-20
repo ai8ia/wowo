@@ -1,90 +1,41 @@
-// 即時代幣排行資料
-const topContainer = document.getElementById('top-coins');
+const tokenList = document.getElementById("token-list");
+const searchInput = document.getElementById("token-search");
+const chainSelect = document.getElementById("chain-select");
 
-async function loadTopCoins() {
-  try {
-    const res = await fetch('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=volume_desc&per_page=6&page=1&sparkline=false');
-    const coins = await res.json();
-
-    coins.forEach(coin => {
-      const div = document.createElement('div');
-      div.className = 'card';
-      div.innerHTML = `
-        <h3 class="text-xl font-bold text-yellow-300">${coin.name} (${coin.symbol.toUpperCase()})</h3>
-        <p>Price: $${coin.current_price.toLocaleString()}</p>
-        <p>24h Volume: $${coin.total_volume.toLocaleString()}</p>
-        <p class="${coin.price_change_percentage_24h >= 0 ? 'text-green-400' : 'text-red-400'}">
-          ${coin.price_change_percentage_24h.toFixed(2)}%
-        </p>
-      `;
-      topContainer.appendChild(div);
-    });
-  } catch (error) {
-    topContainer.innerHTML = '<p class="text-red-400">⚠️ 無法載入即時資料。</p>';
-  }
-}
-
-loadTopCoins();
-
-// AI 推薦模組資料
-const recommended = [
-  { name: 'Avalanche', symbol: 'AVAX', insight: '速度快、漲幅穩定，適合短期關注' },
-  { name: 'Toncoin', symbol: 'TON', insight: '社群熱度上升，突破平均價位' }
+// 模擬幣種資料
+const tokens = [
+  { name: "AVAX", symbol: "AVAX", volume: 1234567890, change: 6.2, score: 9.7, chain: "ethereum" },
+  { name: "SOL", symbol: "SOL", volume: 950000000, change: -3.1, score: 8.9, chain: "solana" },
+  { name: "TON", symbol: "TON", volume: 780000000, change: 4.5, score: 9.3, chain: "ethereum" },
 ];
 
-const recoContainer = document.getElementById('recommended-coins');
-recommended.forEach(token => {
-  const div = document.createElement('div');
-  div.className = 'recommend-card';
-  div.innerHTML = `<h3 class="text-lg text-cyan-300 font-bold">${token.name} (${token.symbol})</h3>
-                   <p class="mt-1 text-gray-300">${token.insight}</p>`;
-  recoContainer.appendChild(div);
+function displayTokens(data) {
+  tokenList.innerHTML = "";
+  data.forEach(token => {
+    const div = document.createElement("div");
+    div.className = "card";
+    div.innerHTML = `
+      <div class="trend-score">🔥 ${token.score}</div>
+      <h3 class="text-xl font-bold text-cyan-300 mb-2">${token.name} (${token.symbol})</h3>
+      <p>📈 Volume: $${token.volume.toLocaleString()}</p>
+      <p>Change: <span class="${token.change >= 0 ? 'text-green-400' : 'text-red-400'}">${token.change}%</span></p>
+      <button class="text-yellow-400 mt-2 underline text-sm">詳情分析</button>
+    `;
+    tokenList.appendChild(div);
+  });
+}
+
+displayTokens(tokens);
+
+// 搜尋 & 鏈選擇邏輯
+searchInput.addEventListener("input", () => {
+  const query = searchInput.value.toLowerCase();
+  const filtered = tokens.filter(t => t.name.toLowerCase().includes(query) || t.symbol.toLowerCase().includes(query));
+  displayTokens(filtered);
 });
 
-// 粒子動畫效果
-const canvas = document.getElementById('particles-bg');
-const ctx = canvas.getContext('2d');
-let particlesArray = [];
-
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
-
-class Particle {
-  constructor() {
-    this.x = Math.random() * canvas.width;
-    this.y = Math.random() * canvas.height;
-    this.size = Math.random() * 2 + 1;
-    this.speedX = Math.random() * 0.5 - 0.25;
-    this.speedY = Math.random() * 0.5 - 0.25;
-  }
-  update() {
-    this.x += this.speedX;
-    this.y += this.speedY;
-    if (this.size > 0.2) this.size -= 0.01;
-  }
-  draw() {
-    ctx.fillStyle = '#00ffcc';
-    ctx.beginPath();
-    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-    ctx.fill();
-  }
-}
-
-function initParticles() {
-  particlesArray = [];
-  for (let i = 0; i < 100; i++) {
-    particlesArray.push(new Particle());
-  }
-}
-
-function animateParticles() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  particlesArray.forEach(p => {
-    p.update();
-    p.draw();
-  });
-  requestAnimationFrame(animateParticles);
-}
-
-initParticles();
-animateParticles();
+chainSelect.addEventListener("change", () => {
+  const chain = chainSelect.value;
+  const filtered = chain === "all" ? tokens : tokens.filter(t => t.chain === chain);
+  displayTokens(filtered);
+});
