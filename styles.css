@@ -20,9 +20,9 @@ body {
   z-index: -1;
 }
 
-/* 卡片樣式 */
+/* 卡片模組樣式 */
 .card {
-  background-color: rgba(0, 0, 0, 0.6);
+  background-color: rgba(0, 0, 0, 0.5);
   border: 1px solid rgba(255, 255, 0, 0.3);
   border-radius: 12px;
   padding: 20px;
@@ -31,5 +31,19 @@ body {
 
 .card:hover {
   transform: scale(1.05);
-  box-shadow: 0 0 20px rgba(255, 255, 0, 0.4);
+  box-shadow: 0 0 12px rgba(255, 255, 0, 0.4);
+}
+
+/* 推薦卡片效果 */
+.recommend-card {
+  background-color: rgba(0, 255, 204, 0.1);
+  border: 1px solid #00ffcc;
+  border-radius: 12px;
+  padding: 16px;
+  transition: transform 0.3s ease;
+}
+
+.recommend-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 12px #00ffcc;
 }
