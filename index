@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ai-ia.win｜用 AI 贏未來</title>
+  <link href="styles.css" rel="stylesheet" />
+  <script src="scripts.js" defer></script>
+</head>
+<body class="bg-gray-900 text-white font-sans relative overflow-hidden">
+  <canvas id="particles-bg"></canvas>
+
+  <header class="text-center py-10 z-10 relative">
+    <h1 class="text-4xl font-bold text-yellow-400 tracking-wide">ai-ia.win</h1>
+    <p class="mt-2 text-lg text-gray-300">用 AI 贏未來｜即時加密幣排行 × MCP 智慧推薦</p>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-4 z-10 relative">
+    <section class="mb-10">
+      <h2 class="text-2xl font-semibold mb-4 text-cyan-300">🔥 即時排行榜</h2>
+      <div id="top-coins" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+    </section>
+
+    <section class="mb-10">
+      <h2 class="text-2xl font-semibold mb-4 text-purple-300">🧠 MCP 智慧分析</h2>
+      <div class="grid gap-6">
+        <div class="card">成本分析：原料、包裝、製程 → 每份 NT$3</div>
+        <div class="card">AI 推薦商品組合：依據偏好、熱賣品項生成</div>
+        <div class="card">庫存流動分析：即時識別滯銷與爆款</div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="text-center text-gray-500 py-6 text-sm border-t border-gray-700 mt-10 z-10 relative">
+    ai-ia.win © 2025. All Rights Reserved.
+  </footer>
+</body>
+</html>
