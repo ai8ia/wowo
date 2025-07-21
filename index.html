@@ -1,36 +1,39 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>MCP 控制台 | ai-ia.win</title>
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css" />
   <script src="scripts.js" defer></script>
 </head>
 <body class="bg-gray-950 text-white font-sans">
-  <header class="p-6 text-center border-b border-gray-800">
-    <h1 class="text-3xl font-bold text-yellow-400 tracking-wide">📊 MCP 控制台</h1>
-    <p class="text-sm text-gray-400 mt-2">用 AI 分析代幣熱度｜監控 Web3 趨勢</p>
+  <header class="text-center p-6 border-b border-gray-800">
+    <h1 class="text-3xl font-bold text-yellow-400">📊 MCP 控制台</h1>
+    <p class="text-sm text-gray-400 mt-1">AI 熱度分析 × 即時排行 × 推薦模組</p>
   </header>
 
   <main class="max-w-6xl mx-auto px-4 py-6">
-    <section class="mb-6">
-      <div class="flex flex-wrap gap-4 justify-center text-sm text-gray-300">
-        <button class="filter-tab active">24h Volume</button>
-        <button class="filter-tab">Top Gainers</button>
-        <button class="filter-tab">Top Losers</button>
-        <select id="chain-select" class="bg-gray-800 text-white p-2 rounded">
-          <option value="all">🌐 所有鏈</option>
-          <option value="ethereum">Ethereum</option>
-          <option value="solana">Solana</option>
-        </select>
-        <input type="text" id="token-search" placeholder="🔎 搜尋代幣或合約地址" class="bg-gray-800 text-sm px-3 py-2 rounded w-60">
-        <button id="add-pair" class="bg-yellow-400 text-black px-3 py-2 rounded">＋ Add Pair</button>
-      </div>
+    <!-- 控制列 -->
+    <section class="mb-8 flex flex-wrap gap-4 justify-center text-sm text-gray-300">
+      <select id="chain-select" class="bg-gray-800 text-white p-2 rounded">
+        <option value="all">🌐 所有鏈</option>
+        <option value="ethereum">Ethereum</option>
+        <option value="solana">Solana</option>
+      </select>
+      <input type="text" id="token-search" placeholder="🔍 搜尋代幣..." class="bg-gray-800 p-2 rounded w-60" />
     </section>
 
+    <!-- 即時排行 -->
     <section>
+      <h2 class="text-xl font-bold text-yellow-400 mb-4">📈 即時排行</h2>
       <div id="token-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+    </section>
+
+    <!-- 推薦模組 -->
+    <section class="mt-10">
+      <h2 class="text-xl font-bold text-yellow-400 mb-4">🧠 MCP 推薦幣種</h2>
+      <div id="recommended-coins" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
     </section>
   </main>
 
