@@ -1,1 +1,12 @@
+feat: 完成 MCP 控制台核心模組整合與首頁推薦渲染
+
+- 新增 src/chart-builder.js：幣種資料生成器
+- 編寫 src/recommend.js：推薦邏輯引擎，產出 JSON
+- 建立 public/token.html：三層走勢圖渲染頁面
+- 製作 public/index.html：推薦艦橋模組＋封面動畫
+- 新增 src/welcome.js：語音登艦模組（Web Speech API）
+- 製作 src/homepage-branding.js：LOGO 展開與標語動畫
+- 建立 public/style.css：UI 樣式、深色背景、動畫效果
+- 加入 assets/mcp-logo.svg：控制台品牌 LOGO
+- 撰寫 README.md：專案介紹、結構說明、部署教學
 
