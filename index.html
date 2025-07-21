@@ -4,33 +4,55 @@
   <meta charset="UTF-8">
   <title>MCP 控制台</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- 样式表 -->
   <link rel="stylesheet" href="styles.css">
+
+  <!-- Chartist 套件用於詳頁圖表 -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/chartist@0.11.4/dist/chartist.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chartist@0.11.4/dist/chartist.min.js"></script>
+
+  <!-- 控制台 JS -->
   <script src="scripts.js" defer></script>
 </head>
 <body class="bg-gray-950 text-white font-sans">
+
+  <!-- Header -->
   <header class="text-center p-6 border-b border-gray-800">
     <h1 class="text-3xl font-bold text-yellow-400">📊 MCP 控制台</h1>
     <p class="text-sm text-gray-400 mt-1">AI 熱度分析 × 即時排行 × 智慧推薦</p>
   </header>
 
+  <!-- Main Section -->
   <main class="max-w-6xl mx-auto px-4 py-6">
+    
+    <!-- 🔄 資料同步提示與 Loading -->
+    <div id="refresh-banner" class="refresh-banner">資料同步中…</div>
+    <div class="loading" id="token-loading">⏳ 正在載入幣種資料…</div>
+
+    <!-- 🔍 搜尋欄 -->
     <section class="mb-8 flex flex-wrap gap-4 justify-center">
       <input type="text" id="token-search" placeholder="🔎 搜尋代幣" class="search-input">
     </section>
 
+    <!-- 📈 即時排行模組 -->
     <section>
       <h2 class="section-title">📈 即時排行</h2>
       <div id="token-list" class="card-grid"></div>
     </section>
 
+    <!-- 🧠 推薦模組 -->
     <section class="mt-10">
       <h2 class="section-title">🧠 MCP 推薦幣種</h2>
       <div id="recommended-coins" class="card-grid"></div>
     </section>
+
   </main>
 
+  <!-- Footer -->
   <footer class="text-center text-gray-600 text-xs py-4 border-t border-gray-800">
     MCP 控制台 © 2025. Powered by ai-ia.win
   </footer>
+
 </body>
 </html>
