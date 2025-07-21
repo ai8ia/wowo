@@ -4,7 +4,9 @@ const DOM = {
   reco: document.getElementById("recommended-coins"),
   search: document.getElementById("token-search"),
   loading: document.getElementById("token-loading"),
-  status: document.getElementById("refresh-banner")
+  status: document.getElementById("refresh-banner"),
+  source: document.getElementById("data-source"),
+  priceBox: document.getElementById("live-price")
 };
 
 // 📊 趨勢分數演算法
@@ -14,12 +16,32 @@ function calcScore(volume, change) {
   return parseFloat(Math.max(5, Math.min(10, (v + c) * 1.5)).toFixed(1));
 }
 
-// 🔍 推薦幣篩選
+// 🧠 AI 評估層
+function getAdvice(score) {
+  if (score >= 8.5) return "📈 技術強勁、交易量活躍，短期看多";
+  if (score <= 6) return "🧐 價格震盪大、量能不足，建議觀察";
+  return "🌿 穩定中，中長線持有建議";
+}
+
+// 🚨 預警提示
+function checkAlerts(token) {
+  if (token.change >= 10) showBanner(`🚀 ${token.name} 爆漲 ${token.change.toFixed(2)}%`);
+  if (token.change <= -10) showBanner(`📉 ${token.name} 暴跌 ${token.change.toFixed(2)}%`);
+}
+function showBanner(msg) {
+  const el = document.createElement("div");
+  el.className = "alert-banner bg-red-900 text-yellow-200 p-2 mb-2 animate-shake";
+  el.textContent = msg;
+  document.body.prepend(el);
+  setTimeout(() => el.remove(), 5000);
+}
+
+// 🧾 推薦邏輯
 function getRecommendations(tokens) {
   return tokens.filter(t => t.score >= 8.5 && t.volume > 5e8).slice(0, 3);
 }
 
-// 🎨 幣種卡片
+// 🎨 主幣種卡片
 function renderCard(token) {
   const el = document.createElement("div");
   el.className = "card";
@@ -31,10 +53,11 @@ function renderCard(token) {
     <p class="mt-2 text-yellow-400 underline text-sm">詳情分析 →</p>
   `;
   el.onclick = () => window.location.href = `token.html?id=${token.id}`;
+  checkAlerts(token);
   return el;
 }
 
-// 🧠 推薦卡片
+// 🌟 推薦卡片
 function renderReco(token) {
   const label = token.change > 5 ? "🌟 短期強勢" :
                 token.change < -2 ? "⚠️ 建議觀察" : "🌱 穩定成長";
@@ -42,10 +65,11 @@ function renderReco(token) {
   el.className = "recommend-card";
   el.innerHTML = `
     <h3 class="text-lg font-bold text-yellow-300">${token.name} (${token.symbol})</h3>
-    <p class="text-sm text-gray-300 mb-2">${label}</p>
+    <p class="text-sm text-gray-300 mb-1">${label}</p>
     <p>Trend Score: ${token.score}</p>
     <p>Volume: $${token.volume.toLocaleString()}</p>
     <p>Change: <span class="${token.change >= 0 ? 'text-green-400' : 'text-red-400'}">${token.change.toFixed(2)}%</span></p>
+    <p class="text-xs italic text-gray-400">${getAdvice(token.score)}</p>
   `;
   el.onclick = () => window.location.href = `token.html?id=${token.id}`;
   return el;
@@ -61,32 +85,60 @@ function render(tokens) {
   localStorage.setItem("mcpRecommended", JSON.stringify(recos.map(t => t.id)));
 }
 
-// 🌐 取得市場資料
+// 📡 即時價格更新（Binance）
+function connectLivePrice(symbol = "BTCUSDT") {
+  const socket = new WebSocket(`wss://stream.binance.com:9443/ws/${symbol.toLowerCase()}@ticker`);
+  socket.onmessage = e => {
+    const { c: current } = JSON.parse(e.data);
+    DOM.priceBox.textContent = `$${parseFloat(current).toFixed(2)}`;
+  };
+  socket.onerror = () => {
+    DOM.priceBox.textContent = "❌ 錯誤";
+  };
+}
+
+// 🌐 API 資料載入（來源切換）
 async function fetchData() {
+  const source = DOM.source?.value || "gecko";
+  DOM.loading.textContent = "⏳ 同步中…";
+  DOM.status.textContent = `📡 來源：${source}`;
+
+  let tokens = [];
+
   try {
-    DOM.loading.textContent = "⏳ 正在同步資料…";
-    DOM.status.textContent = "📡 MCP 資料更新中…";
-
-    const res = await fetch("https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=volume_desc&per_page=30");
-    const raw = await res.json();
-
-    const tokens = raw.map(t => ({
-      id: t.id,
-      name: t.name,
-      symbol: t.symbol.toUpperCase(),
-      volume: t.total_volume || 0,
-      change: t.price_change_percentage_24h || 0,
-      score: calcScore(t.total_volume, t.price_change_percentage_24h)
-    }));
+    if (source === "cmc") {
+      const res = await fetch("https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest", {
+        headers: { "X-CMC_PRO_API_KEY": "填入你的API金鑰" }
+      });
+      const raw = await res.json();
+      tokens = raw.data.map(t => ({
+        id: t.id,
+        name: t.name,
+        symbol: t.symbol,
+        volume: t.quote.USD.volume_24h,
+        change: t.quote.USD.percent_change_24h,
+        score: calcScore(t.quote.USD.volume_24h, t.quote.USD.percent_change_24h)
+      }));
+    } else {
+      const res = await fetch("https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=volume_desc&per_page=30");
+      const raw = await res.json();
+      tokens = raw.map(t => ({
+        id: t.id,
+        name: t.name,
+        symbol: t.symbol.toUpperCase(),
+        volume: t.total_volume,
+        change: t.price_change_percentage_24h,
+        score: calcScore(t.total_volume, t.price_change_percentage_24h)
+      }));
+    }
 
     window.tokensData = tokens;
     render(tokens);
-
     DOM.loading.textContent = "";
-    DOM.status.textContent = `✅ 資料已更新 (${new Date().toLocaleTimeString()})`;
+    DOM.status.textContent = `✅ 更新於 ${new Date().toLocaleTimeString()}`;
   } catch (err) {
-    console.error("🚨 資料錯誤:", err);
-    DOM.list.innerHTML = `<p class="text-red-400">⚠️ 載入失敗，請稍後重試。</p>`;
+    console.error("🚨 取得錯誤:", err);
+    DOM.list.innerHTML = `<p class="text-red-400">⚠️ 載入失敗</p>`;
   }
 }
 
@@ -101,4 +153,5 @@ DOM.search.addEventListener("input", () => {
 
 // 🚀 初始化
 fetchData();
-setInterval(fetchData, 60000); // 每 60 秒更新一次
+setInterval(fetchData, 60000);
+connectLivePrice("BTCUSDT");
