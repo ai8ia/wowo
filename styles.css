@@ -1,54 +1,95 @@
+/* 🌑 主題配色 */
 body {
+  margin: 0;
+  padding: 0;
   background-color: #0e0e1a;
-  color: #fff;
+  color: #ffffff;
   font-family: 'Segoe UI', 'Helvetica Neue', sans-serif;
 }
 
+/* 📍 版面標題 */
+.section-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #facc15;
+  margin: 1rem 0;
+  text-align: center;
+}
+
+/* 🔍 搜尋欄 */
 .search-input {
   background: #1c1c2b;
   color: #fff;
   border: none;
-  padding: 10px 16px;
-  border-radius: 10px;
-  font-size: 14px;
+  padding: 12px 18px;
+  border-radius: 12px;
+  font-size: 15px;
+  width: 260px;
+  transition: box-shadow 0.3s ease;
+}
+.search-input:focus {
+  outline: none;
+  box-shadow: 0 0 10px #00ffcc80;
 }
 
-.section-title {
-  font-size: 1.25rem;
-  font-weight: bold;
-  color: #facc15;
-  margin-bottom: 1rem;
-}
-
+/* 🧱 卡片排版 */
 .card-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: 1.5rem;
+  padding-bottom: 2rem;
 }
 
+/* 🔧 卡片樣式 */
 .card, .recommend-card {
   background: #1c1c2b;
-  border-radius: 12px;
   padding: 20px;
-  border: 1px solid rgba(255,255,255,0.07);
-  position: relative;
-  transition: 0.3s ease;
-  cursor: pointer;
+  border-radius: 12px;
+  border: 1px solid #333;
+  transition: transform 0.3s ease;
 }
-
 .card:hover, .recommend-card:hover {
-  transform: scale(1.03);
-  box-shadow: 0 0 12px #00ffcc66;
+  transform: scale(1.02);
 }
 
+/* 🔥 熱度分數 */
 .trend-score {
   position: absolute;
-  top: 16px;
-  right: 16px;
+  top: 12px;
+  right: 12px;
   background: #00ffcc;
   color: #000;
   font-size: 12px;
-  padding: 4px 8px;
+  padding: 4px 6px;
   border-radius: 6px;
   font-weight: bold;
+}
+
+/* 📊 詳頁統計區塊 */
+.stat {
+  background: #1a1a2a;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #ccc;
+  text-align: center;
+}
+
+/* ⏳ Loading & Refresh 提示 */
+.refresh-banner, .loading {
+  font-size: 14px;
+  text-align: center;
+  margin-bottom: 1rem;
+  color: #00ffcc;
+}
+
+/* 📈 圖表樣式（Chartist） */
+.ct-chart {
+  background-color: #181818;
+  padding: 12px;
+  border-radius: 8px;
+}
+.ct-label {
+  color: #bbb;
+  font-size: 12px;
 }
