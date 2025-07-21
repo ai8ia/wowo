@@ -1,50 +1,46 @@
-/* 🎯 基本字型與背景 */
 body {
   background-color: #0e0e1a;
-  color: #ffffff;
+  color: #fff;
   font-family: 'Segoe UI', 'Helvetica Neue', sans-serif;
-  margin: 0;
-  padding: 0;
 }
 
-/* 📌 標題文字樣式 */
-h1, h2, h3 {
-  margin: 0;
-  font-weight: bold;
-  color: #facc15;
-}
-p {
-  line-height: 1.6;
-  margin: 0.5em 0;
-}
-
-/* 🔍 搜尋欄 */
-#token-search {
-  background-color: #1c1c2b;
-  color: #ffffff;
+.search-input {
+  background: #1c1c2b;
+  color: #fff;
   border: none;
   padding: 10px 16px;
   border-radius: 10px;
   font-size: 14px;
-  outline: none;
 }
 
-/* 📦 卡片樣式（排行與推薦通用） */
+.section-title {
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: #facc15;
+  margin-bottom: 1rem;
+}
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
 .card, .recommend-card {
-  background-color: #1c1c2b;
-  border: 1px solid rgba(255,255,255,0.07);
+  background: #1c1c2b;
   border-radius: 12px;
   padding: 20px;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  cursor: pointer;
+  border: 1px solid rgba(255,255,255,0.07);
   position: relative;
+  transition: 0.3s ease;
+  cursor: pointer;
 }
+
 .card:hover, .recommend-card:hover {
   transform: scale(1.03);
   box-shadow: 0 0 12px #00ffcc66;
 }
 
-/* 💡 熱度分數標籤 */
 .trend-score {
   position: absolute;
   top: 16px;
@@ -56,40 +52,3 @@ p {
   border-radius: 6px;
   font-weight: bold;
 }
-
-/* 📊 詳頁數據模組 */
-.stat {
-  background-color: #1f1f2f;
-  padding: 12px;
-  border-radius: 10px;
-  text-align: center;
-  font-size: 14px;
-  color: #ccc;
-}
-
-/* 🧠 AI 評估區塊 */
-.bg-yellow-300 {
-  background-color: #facc15;
-}
-.text-black {
-  color: #000;
-}
-
-/* 📋 推薦模組顏色樣式 */
-.text-green-400 { color: #4ade80; }
-.text-red-400   { color: #f87171; }
-.text-yellow-300{ color: #fde047; }
-.text-cyan-300  { color: #67e8f9; }
-.text-gray-300  { color: #d1d5db; }
-.text-gray-400  { color: #9ca3af; }
-.text-gray-600  { color: #4b5563; }
-
-.text-sm  { font-size: 0.875rem; }
-.text-xs  { font-size: 0.75rem; }
-.underline { text-decoration: underline; }
-.font-bold { font-weight: bold; }
-
-.mt-1 { margin-top: 0.25rem; }
-.mt-2 { margin-top: 0.5rem; }
-.mb-2 { margin-bottom: 0.5rem; }
-.mb-4 { margin-bottom: 1rem; }
