@@ -2,31 +2,25 @@
 <html lang="zh-Hant">
 <head>
   <meta charset="UTF-8">
-  <title>MCP 詳頁分析（DEBUG）</title>
+  <title>MCP 詳頁分析</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="styles.css">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/chartist@0.11.4/dist/chartist.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chartist@0.11.4/dist/chartist.min.js"></script>
   <script src="token.js" defer></script>
-  <style>
-    #debug-banner {
-      background-color: #1e293b;
-      color: #fff;
-      font-size: 12px;
-      padding: 8px 12px;
-      font-family: monospace;
-      border-bottom: 1px solid #334155;
-    }
-  </style>
 </head>
 <body class="bg-gray-950 text-white font-sans">
-  <div id="debug-banner">🚀 MCP 詳頁 Debug 模式啟動中…</div>
+  <header class="text-center p-6 border-b border-gray-800">
+    <h1 class="text-3xl font-bold text-yellow-400">🔍 MCP 詳頁分析</h1>
+    <p class="text-sm text-gray-400 mt-1">即時資料 × AI 評估 × 類似幣種推薦</p>
+  </header>
 
   <main class="max-w-4xl mx-auto px-4 py-6" id="token-detail">
-    <p class="text-gray-400 text-sm">⏳ 等待載入代幣資料…</p>
+    <p class="text-sm text-gray-400">⏳ 正在載入代幣資料...</p>
   </main>
 
   <footer class="text-center text-gray-600 text-xs py-4 border-t border-gray-800">
-    MCP 詳頁（DEBUG） © 2025. Powered by ai-ia.win
+    MCP 控制台 © 2025. Powered by ai-ia.win
   </footer>
 </body>
 </html>
