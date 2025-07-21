@@ -1,22 +1,21 @@
-const tokenList = document.getElementById("token-list");
-const recoContainer = document.getElementById("recommended-coins");
-const searchInput = document.getElementById("token-search");
-
-function calculateTrendScore(volume, change) {
-  const volumeWeight = Math.min(volume / 1e9, 2); // 上限 2
-  const changeWeight = change / 5;
-  return Math.max(5, Math.min(10, (volumeWeight + changeWeight) * 1.5));
-}
-
-function getRecommendedTokens(tokens) {
-  return tokens
-    .filter(t => t.score >= 8.5 && t.volume > 500000000)
-    .sort((a, b) => b.score - a.score)
-    .slice(0, 3);
+function showDebugBanner(message, color = "#4b5563") {
+  const banner = document.createElement("div");
+  banner.style.position = "fixed";
+  banner.style.top = "0";
+  banner.style.left = "0";
+  banner.style.width = "100%";
+  banner.style.padding = "8px";
+  banner.style.backgroundColor = color;
+  banner.style.color = "#fff";
+  banner.style.fontSize = "13px";
+  banner.style.textAlign = "center";
+  banner.textContent = message;
+  document.body.appendChild(banner);
 }
 
 function displayTokens(data) {
   tokenList.innerHTML = "";
+  console.log(`📦 代幣筆數：${data.length}`);
   data.forEach(token => {
     const div = document.createElement("div");
     div.className = "card";
@@ -29,6 +28,7 @@ function displayTokens(data) {
     `;
     div.onclick = () => window.location.href = `token.html?id=${token.id}`;
     tokenList.appendChild(div);
+    console.log(`✅ 插入代幣卡片：${token.name} (${token.symbol})`);
   });
 }
 
@@ -49,11 +49,13 @@ function displayRecommended(recommended) {
     `;
     div.onclick = () => window.location.href = `token.html?id=${token.id}`;
     recoContainer.appendChild(div);
+    console.log(`🎯 推薦幣種：${token.name}`);
   });
 }
 
 async function loadTokensFromAPI() {
   try {
+    showDebugBanner("MCP 控制台已啟動 ✔");
     const res = await fetch("https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=volume_desc&per_page=30");
     const data = await res.json();
 
@@ -66,21 +68,13 @@ async function loadTokensFromAPI() {
       score: calculateTrendScore(t.total_volume || 0, t.price_change_percentage_24h || 0).toFixed(1)
     }));
 
+    console.log("📡 API 呼叫成功");
     window.tokensData = tokens;
     displayTokens(tokens);
     displayRecommended(getRecommendedTokens(tokens));
   } catch (err) {
+    showDebugBanner("⚠️ 資料載入失敗，請檢查 API 或路徑", "#b91c1c");
     tokenList.innerHTML = "<p class='text-red-400'>⚠️ 資料載入失敗，請稍後重試。</p>";
     console.error("🔴 MCP 控制台載入錯誤:", err);
   }
 }
-
-searchInput.addEventListener("input", () => {
-  const q = searchInput.value.toLowerCase();
-  const filtered = window.tokensData.filter(t =>
-    t.name.toLowerCase().includes(q) || t.symbol.toLowerCase().includes(q)
-  );
-  displayTokens(filtered);
-});
-
-loadTokensFromAPI();
