@@ -7,22 +7,23 @@ function calculateTrendScore(volume, change) {
   return Math.max(5, Math.min(10, (volumeWeight + changeWeight) * 1.5));
 }
 
-async function getSimilarTokens(currentToken) {
-  const res = await fetch("https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=volume_desc&per_page=50");
-  const data = await res.json();
+async function getRecommendedFromStorage(currentId) {
+  try {
+    const ids = JSON.parse(localStorage.getItem("mcpRecommended")) || [];
+    const filtered = ids.filter(id => id !== currentId).slice(0, 3);
+    const tokens = [];
 
-  const currentScore = calculateTrendScore(
-    currentToken.market_data?.total_volume?.usd || 0,
-    currentToken.market_data?.price_change_percentage_24h || 0
-  );
+    for (const id of filtered) {
+      const res = await fetch(`https://api.coingecko.com/api/v3/coins/${id}`);
+      const info = await res.json();
+      tokens.push(info);
+    }
 
-  return data
-    .filter(t => t.id !== currentToken.id)
-    .filter(t => {
-      const score = calculateTrendScore(t.total_volume || 0, t.price_change_percentage_24h || 0);
-      return Math.abs(score - currentScore) <= 1.2;
-    })
-    .slice(0, 3);
+    return tokens;
+  } catch (err) {
+    console.error("📦 推薦幣種載入失敗", err);
+    return [];
+  }
 }
 
 async function loadTokenDetail(id) {
@@ -73,19 +74,20 @@ async function loadTokenDetail(id) {
       }
     });
 
-    const similar = await getSimilarTokens(info);
+    const similar = await getRecommendedFromStorage(id);
     if (similar.length > 0) {
-      let html = `<h3 class="text-lg font-bold text-yellow-400 mb-2">🔗 類似推薦幣種</h3><ul class="text-sm text-gray-300 space-y-2">`;
+      let html = `<h3 class="text-lg font-bold text-yellow-400 mb-2">🔗 推薦幣種</h3><ul class="text-sm text-gray-300 space-y-2">`;
       similar.forEach(t => {
-        html += `<li>✅ <a href="token.html?id=${t.id}" class="text-cyan-300 underline">${t.name}</a> - Volume: $${t.total_volume.toLocaleString()}</li>`;
+        const vol = t.market_data?.total_volume?.usd || 0;
+        html += `<li>✅ <a href="token.html?id=${t.id}" class="text-cyan-300 underline">${t.name}</a> — Volume: $${vol.toLocaleString()}</li>`;
       });
       html += `</ul>`;
       detailContainer.innerHTML += html;
     }
 
   } catch (err) {
-    console.error("❌ 詳頁錯誤", err);
-    detailContainer.innerHTML = `<p class="text-red-400">⚠️ 無法載入此幣種，請確認 ID 是否正確</p>`;
+    console.error("❌ 詳頁載入失敗", err);
+    detailContainer.innerHTML = `<p class="text-red-400">⚠️ 無法載入此幣種，請確認 ID 是否正確。</p>`;
   }
 }
 
