@@ -99,44 +99,55 @@ function connectLivePrice(symbol = "BTCUSDT") {
 
 // 🌐 API 資料載入（來源切換）
 async function fetchData() {
-  const source = DOM.source?.value || "gecko";
-  DOM.loading.textContent = "⏳ 同步中…";
-  DOM.status.textContent = `📡 來源：${source}`;
+  const geckoURL = "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=volume_desc&per_page=30";
+  const loreURL = "https://api.coinlore.net/api/tickers/?limit=30";
+
+  DOM.loading.textContent = "🔄 嘗試抓取資料中…";
+  DOM.status.textContent = "📡 使用來源：CoinGecko ⟶ CoinLore 備援";
 
   let tokens = [];
 
   try {
-    if (source === "cmc") {
-      const res = await fetch("https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest", {
-        headers: { "X-CMC_PRO_API_KEY": "填入你的API金鑰" }
-      });
+    const res = await fetch(geckoURL);
+    const raw = await res.json();
+
+    tokens = raw.map(t => ({
+      id: t.id,
+      name: t.name,
+      symbol: t.symbol.toUpperCase(),
+      volume: t.total_volume,
+      change: t.price_change_percentage_24h,
+      score: calcScore(t.total_volume, t.price_change_percentage_24h)
+    }));
+
+    DOM.status.textContent = "✅ 使用 CoinGecko 資料";
+  } catch (err) {
+    console.warn("⚠️ CoinGecko 錯誤，轉用 CoinLore", err);
+    try {
+      const res = await fetch(loreURL);
       const raw = await res.json();
+
       tokens = raw.data.map(t => ({
-        id: t.id,
+        id: String(t.id),
         name: t.name,
         symbol: t.symbol,
-        volume: t.quote.USD.volume_24h,
-        change: t.quote.USD.percent_change_24h,
-        score: calcScore(t.quote.USD.volume_24h, t.quote.USD.percent_change_24h)
+        volume: t.volume_usd,
+        change: t.percent_change_24h,
+        score: calcScore(t.volume_usd, t.percent_change_24h)
       }));
-    } else {
-      const res = await fetch("https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=volume_desc&per_page=30");
-      const raw = await res.json();
-      tokens = raw.map(t => ({
-        id: t.id,
-        name: t.name,
-        symbol: t.symbol.toUpperCase(),
-        volume: t.total_volume,
-        change: t.price_change_percentage_24h,
-        score: calcScore(t.total_volume, t.price_change_percentage_24h)
-      }));
-    }
 
-    window.tokensData = tokens;
-    render(tokens);
-    DOM.loading.textContent = "";
-    DOM.status.textContent = `✅ 更新於 ${new Date().toLocaleTimeString()}`;
-  } catch (err) {
+      DOM.status.textContent = "✅ 使用 CoinLore 資料";
+    } catch (err2) {
+      console.error("🚨 兩個 API 都失敗", err2);
+      DOM.list.innerHTML = `<p class="text-red-400">⚠️ 無法載入幣種資料，請稍後重試</p>`;
+      return;
+    }
+  }
+
+  window.tokensData = tokens;
+  render(tokens);
+  DOM.loading.textContent = `✅ 更新完成 (${new Date().toLocaleTimeString()})`;
+} catch (err) {
     console.error("🚨 取得錯誤:", err);
     DOM.list.innerHTML = `<p class="text-red-400">⚠️ 載入失敗</p>`;
   }
