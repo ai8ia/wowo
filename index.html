@@ -1,12 +1,49 @@
-<select id="data-source">
-  <option value="gecko">CoinGecko</option>
-  <option value="cmc">CoinMarketCap</option>
-</select>
-<span id="refresh-banner"></span>
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MCP 控制台</title>
+  <link rel="stylesheet" href="styles/styles.css" />
+</head>
+<body class="bg-gray-950 text-white font-inter p-6">
 
-<div id="live-price" class="text-green-300 text-xl mt-2">$--</div>
-<input type="search" id="token-search" placeholder="搜尋幣種…" class="mt-3 p-2 bg-gray-800 text-white rounded" />
+  <!-- 控制面板 -->
+  <section class="flex items-center gap-4 mb-4">
+    <select id="data-source" class="bg-gray-800 text-white p-2 rounded">
+      <option value="gecko">CoinGecko</option>
+      <option value="cmc">CoinMarketCap</option>
+    </select>
+    <span id="refresh-banner" class="text-yellow-300"></span>
+    <div class="ml-auto text-sm">
+      ⏱️ 每 60 秒自動更新
+    </div>
+  </section>
 
-<div id="token-list"></div>
-<div id="recommended-coins"></div>
-<div id="token-loading" class="text-yellow-400 mt-2"></div>
+  <!-- 即時價格區 -->
+  <section class="mb-6">
+    <h2 class="text-xl font-bold text-yellow-400">BTC 即時價格</h2>
+    <p id="live-price" class="text-green-300 text-2xl font-bold mt-2">$--</p>
+  </section>
+
+  <!-- 搜尋與列表 -->
+  <section class="mb-6">
+    <input type="search" id="token-search"
+      placeholder="🔍 搜尋幣種…" class="w-full p-3 bg-gray-800 text-white rounded" />
+  </section>
+
+  <!-- 幣種清單 -->
+  <section id="token-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8"></section>
+
+  <!-- 推薦幣種 -->
+  <section>
+    <h3 class="text-lg font-bold text-yellow-300 mb-2">🔗 推薦幣種</h3>
+    <div id="recommended-coins" class="grid gap-4"></div>
+  </section>
+
+  <!-- 更新狀態 -->
+  <div id="token-loading" class="text-yellow-400 mt-4"></div>
+
+  <script src="scripts/scripts.js" defer></script>
+</body>
+</html>
