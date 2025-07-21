@@ -9,6 +9,9 @@ const DOM = {
   priceBox: document.getElementById("live-price")
 };
 
+// ⭐ 收藏管理
+const favorites = new Set(JSON.parse(localStorage.getItem("mcpFavorites") || "[]"));
+
 // 📊 趨勢分數演算法
 function calcScore(volume, change) {
   const v = Math.min(volume / 1e9, 2);
@@ -36,6 +39,18 @@ function showBanner(msg) {
   setTimeout(() => el.remove(), 5000);
 }
 
+// 📡 即時價格更新（Binance）
+function connectLivePrice(symbol = "BTCUSDT") {
+  const socket = new WebSocket(`wss://stream.binance.com:9443/ws/${symbol.toLowerCase()}@ticker`);
+  socket.onmessage = e => {
+    const { c: current } = JSON.parse(e.data);
+    DOM.priceBox.textContent = `$${parseFloat(current).toFixed(2)}`;
+  };
+  socket.onerror = () => {
+    DOM.priceBox.textContent = "❌ 錯誤";
+  };
+}
+
 // 🧾 推薦邏輯
 function getRecommendations(tokens) {
   return tokens.filter(t => t.score >= 8.5 && t.volume > 5e8).slice(0, 3);
@@ -51,7 +66,14 @@ function renderCard(token) {
     <p>Volume: $${token.volume.toLocaleString()}</p>
     <p>Change: <span class="${token.change >= 0 ? 'text-green-400' : 'text-red-400'}">${token.change.toFixed(2)}%</span></p>
     <p class="mt-2 text-yellow-400 underline text-sm">詳情分析 →</p>
+    <button class="mt-2 text-sm ${favorites.has(token.id) ? 'text-yellow-300' : 'text-gray-400'}">⭐ 收藏</button>
   `;
+  el.querySelector("button").onclick = e => {
+    e.stopPropagation();
+    favorites.has(token.id) ? favorites.delete(token.id) : favorites.add(token.id);
+    localStorage.setItem("mcpFavorites", JSON.stringify([...favorites]));
+    fetchData(); // 重新渲染
+  };
   el.onclick = () => window.location.href = `token.html?id=${token.id}`;
   checkAlerts(token);
   return el;
@@ -79,38 +101,28 @@ function renderReco(token) {
 function render(tokens) {
   DOM.list.innerHTML = "";
   DOM.reco.innerHTML = "";
+
   tokens.forEach(t => DOM.list.appendChild(renderCard(t)));
+
   const recos = getRecommendations(tokens);
   recos.forEach(t => DOM.reco.appendChild(renderReco(t)));
+
   localStorage.setItem("mcpRecommended", JSON.stringify(recos.map(t => t.id)));
 }
 
-// 📡 即時價格更新（Binance）
-function connectLivePrice(symbol = "BTCUSDT") {
-  const socket = new WebSocket(`wss://stream.binance.com:9443/ws/${symbol.toLowerCase()}@ticker`);
-  socket.onmessage = e => {
-    const { c: current } = JSON.parse(e.data);
-    DOM.priceBox.textContent = `$${parseFloat(current).toFixed(2)}`;
-  };
-  socket.onerror = () => {
-    DOM.priceBox.textContent = "❌ 錯誤";
-  };
-}
-
-// 🌐 API 資料載入（來源切換）
+// 🌐 API 資料載入（Gecko → Lore）
 async function fetchData() {
   const geckoURL = "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=volume_desc&per_page=30";
   const loreURL = "https://api.coinlore.net/api/tickers/?limit=30";
 
-  DOM.loading.textContent = "🔄 嘗試抓取資料中…";
-  DOM.status.textContent = "📡 使用來源：CoinGecko ⟶ CoinLore 備援";
+  DOM.loading.textContent = "🔄 抓取中…";
+  DOM.status.textContent = "📡 嘗試 CoinGecko → CoinLore";
 
   let tokens = [];
 
   try {
     const res = await fetch(geckoURL);
     const raw = await res.json();
-
     tokens = raw.map(t => ({
       id: t.id,
       name: t.name,
@@ -119,14 +131,11 @@ async function fetchData() {
       change: t.price_change_percentage_24h,
       score: calcScore(t.total_volume, t.price_change_percentage_24h)
     }));
-
-    DOM.status.textContent = "✅ 使用 CoinGecko 資料";
-  } catch (err) {
-    console.warn("⚠️ CoinGecko 錯誤，轉用 CoinLore", err);
+    DOM.status.textContent = `✅ 來源：CoinGecko（${new Date().toLocaleTimeString()})`;
+  } catch {
     try {
       const res = await fetch(loreURL);
       const raw = await res.json();
-
       tokens = raw.data.map(t => ({
         id: String(t.id),
         name: t.name,
@@ -135,22 +144,16 @@ async function fetchData() {
         change: t.percent_change_24h,
         score: calcScore(t.volume_usd, t.percent_change_24h)
       }));
-
-      DOM.status.textContent = "✅ 使用 CoinLore 資料";
+      DOM.status.textContent = `✅ 來源：CoinLore（${new Date().toLocaleTimeString()})`;
     } catch (err2) {
-      console.error("🚨 兩個 API 都失敗", err2);
-      DOM.list.innerHTML = `<p class="text-red-400">⚠️ 無法載入幣種資料，請稍後重試</p>`;
+      DOM.list.innerHTML = `<p class="text-red-400">❌ 資料載入失敗</p>`;
       return;
     }
   }
 
   window.tokensData = tokens;
   render(tokens);
-  DOM.loading.textContent = `✅ 更新完成 (${new Date().toLocaleTimeString()})`;
-} catch (err) {
-    console.error("🚨 取得錯誤:", err);
-    DOM.list.innerHTML = `<p class="text-red-400">⚠️ 載入失敗</p>`;
-  }
+  DOM.loading.textContent = "";
 }
 
 // 🔍 搜尋事件
