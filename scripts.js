@@ -55,7 +55,8 @@ function displayTokens(data) {
         ${token.change.toFixed(2)}%</span></p>
       <p class="mt-2 text-yellow-400 underline text-sm">詳情分析</p>
     `;
-    div.onclick = () => window.open(`https://www.coingecko.com/en/coins/${token.id}`, "_blank");
+    div.onclick = () => window.location.href = `token.html?id=${token.id}`;
+
     tokenList.appendChild(div);
   });
 }
