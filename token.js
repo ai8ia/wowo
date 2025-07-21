@@ -23,6 +23,27 @@ async function loadTokenDetail(id) {
                 : trendScore < 6.5 ? "建議觀察"
                 : "穩定成長";
 
+
+
+    async function getSimilarTokens(currentToken) {
+  const res = await fetch("https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=volume_desc&per_page=50&page=1&sparkline=false");
+  const data = await res.json();
+
+  const currentChain = currentToken.platforms?.ethereum ? "ethereum" :
+                       currentToken.platforms?.solana ? "solana" : "unknown";
+
+  const currentScore = Math.max(5, Math.min(10, (currentToken.market_data.total_volume.usd / 1e9 + currentToken.market_data.price_change_percentage_24h / 5) * 1.5));
+
+  const similar = data.filter(t => {
+    if (t.id === currentToken.id) return false;
+    const chain = Math.random() > 0.5 ? "ethereum" : "solana"; // 暫時模擬鏈別
+    const score = Math.max(5, Math.min(10, (t.total_volume / 1e9 + t.price_change_percentage_24h / 5) * 1.5));
+    return chain === currentChain && Math.abs(score - currentScore) <= 1.2;
+  }).slice(0, 3);
+
+  return similar;
+}
+
     // 詳頁內容渲染
     detailContainer.innerHTML = `
       <div class="flex items-center gap-4 mb-4">
