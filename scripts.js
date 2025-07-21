@@ -1,59 +1,78 @@
-const tokenList = document.getElementById("token-list");
-const recoContainer = document.getElementById("recommended-coins");
-const searchInput = document.getElementById("token-search");
+const DOM = {
+  tokenList: document.getElementById("token-list"),
+  recoContainer: document.getElementById("recommended-coins"),
+  searchInput: document.getElementById("token-search"),
+  loadingBanner: document.getElementById("token-loading"),
+  refreshStatus: document.getElementById("refresh-banner")
+};
 
 function calculateTrendScore(volume, change) {
   const volumeWeight = Math.min(volume / 1e9, 2);
   const changeWeight = change / 5;
-  return Math.max(5, Math.min(10, (volumeWeight + changeWeight) * 1.5));
+  return parseFloat(Math.max(5, Math.min(10, (volumeWeight + changeWeight) * 1.5)).toFixed(1));
 }
 
 function getRecommendedTokens(tokens) {
   return tokens.filter(t => t.score >= 8.5 && t.volume > 5e8).slice(0, 3);
 }
 
-function displayTokens(data) {
-  tokenList.innerHTML = "";
-  data.forEach(token => {
-    const div = document.createElement("div");
-    div.className = "card";
-    div.innerHTML = `
-      <div class="trend-score">🔥 ${token.score}</div>
-      <h3 class="text-xl font-bold text-cyan-300 mb-2">${token.name} (${token.symbol})</h3>
-      <p>Volume: $${token.volume.toLocaleString()}</p>
-      <p>Change: <span class="${token.change >= 0 ? 'text-green-400' : 'text-red-400'}">${token.change.toFixed(2)}%</span></p>
-      <p class="mt-2 text-yellow-400 underline text-sm">詳情分析 →</p>
-    `;
-    div.onclick = () => window.location.href = `token.html?id=${token.id}`;
-    tokenList.appendChild(div);
+function createTokenCard(token) {
+  const card = document.createElement("div");
+  card.className = "card";
+  card.innerHTML = `
+    <div class="trend-score">🔥 ${token.score}</div>
+    <h3 class="text-xl font-bold text-cyan-300 mb-2">${token.name} (${token.symbol})</h3>
+    <p>Volume: $${token.volume.toLocaleString()}</p>
+    <p>Change: <span class="${token.change >= 0 ? 'text-green-400' : 'text-red-400'}">${token.change.toFixed(2)}%</span></p>
+    <p class="mt-2 text-yellow-400 underline text-sm">詳情分析 →</p>
+  `;
+  card.addEventListener("click", () => {
+    window.location.href = `token.html?id=${token.id}`;
   });
+  return card;
 }
 
-function displayRecommended(recommended) {
-  recoContainer.innerHTML = "";
-  recommended.forEach(token => {
-    const tag = token.change > 5 ? "🌟 短期強勢" : token.change < -2 ? "⚠️ 建議觀察" : "🌱 穩定成長";
-    const div = document.createElement("div");
-    div.className = "recommend-card";
-    div.innerHTML = `
-      <h3 class="text-lg font-bold text-yellow-300">${token.name} (${token.symbol})</h3>
-      <p class="text-sm text-gray-300 mb-2">${tag}</p>
-      <p>Trend Score: ${token.score}</p>
-      <p>Volume: $${token.volume.toLocaleString()}</p>
-      <p>Change: <span class="${token.change >= 0 ? 'text-green-400' : 'text-red-400'}">${token.change.toFixed(2)}%</span></p>
-    `;
-    div.onclick = () => window.location.href = `token.html?id=${token.id}`;
-    recoContainer.appendChild(div);
+function createRecommendedCard(token) {
+  const tag = token.change > 5
+    ? "🌟 短期強勢"
+    : token.change < -2
+    ? "⚠️ 建議觀察"
+    : "🌱 穩定成長";
+
+  const card = document.createElement("div");
+  card.className = "recommend-card";
+  card.innerHTML = `
+    <h3 class="text-lg font-bold text-yellow-300">${token.name} (${token.symbol})</h3>
+    <p class="text-sm text-gray-300 mb-2">${tag}</p>
+    <p>Trend Score: ${token.score}</p>
+    <p>Volume: $${token.volume.toLocaleString()}</p>
+    <p>Change: <span class="${token.change >= 0 ? 'text-green-400' : 'text-red-400'}">${token.change.toFixed(2)}%</span></p>
+  `;
+  card.addEventListener("click", () => {
+    window.location.href = `token.html?id=${token.id}`;
   });
+  return card;
 }
 
-async function loadTokensFromAPI() {
+function displayTokens(tokens) {
+  DOM.tokenList.innerHTML = "";
+  tokens.forEach(token => DOM.tokenList.appendChild(createTokenCard(token)));
+}
+
+function displayRecommended(tokens) {
+  DOM.recoContainer.innerHTML = "";
+  tokens.forEach(token => DOM.recoContainer.appendChild(createRecommendedCard(token)));
+}
+
+async function fetchMarketData() {
+  const endpoint = "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=volume_desc&per_page=30";
+
   try {
-    document.getElementById("token-loading").textContent = "⏳ 正在同步資料…";
-    document.getElementById("refresh-banner").textContent = "📡 MCP 資料更新中…";
+    DOM.loadingBanner.textContent = "⏳ 正在同步資料…";
+    DOM.refreshStatus.textContent = "📡 MCP 資料更新中…";
 
-    const res = await fetch("https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=volume_desc&per_page=30");
-    const data = await res.json();
+    const response = await fetch(endpoint);
+    const data = await response.json();
 
     const tokens = data.map(t => ({
       id: t.id,
@@ -61,33 +80,40 @@ async function loadTokensFromAPI() {
       symbol: t.symbol.toUpperCase(),
       volume: t.total_volume || 0,
       change: t.price_change_percentage_24h || 0,
-      score: calculateTrendScore(t.total_volume || 0, t.price_change_percentage_24h || 0).toFixed(1)
+      score: calculateTrendScore(t.total_volume || 0, t.price_change_percentage_24h || 0)
     }));
 
     window.tokensData = tokens;
-
     const recommended = getRecommendedTokens(tokens);
+
     displayTokens(tokens);
     displayRecommended(recommended);
+
     localStorage.setItem("mcpRecommended", JSON.stringify(recommended.map(t => t.id)));
 
-    document.getElementById("token-loading").textContent = "";
-    document.getElementById("refresh-banner").textContent = `✅ 資料已更新 (${new Date().toLocaleTimeString()})`;
-  } catch (err) {
-    tokenList.innerHTML = `<p class="text-red-400">⚠️ 資料載入失敗，請稍後重試。</p>`;
-    console.error("📡 API 錯誤", err);
+    DOM.loadingBanner.textContent = "";
+    DOM.refreshStatus.textContent = `✅ 資料已更新 (${new Date().toLocaleTimeString()})`;
+  } catch (error) {
+    DOM.tokenList.innerHTML = `<p class="text-red-400">⚠️ 資料載入失敗，請稍後重試。</p>`;
+    console.error("📡 API 錯誤:", error);
   }
 }
 
-// 搜尋功能
-searchInput.addEventListener("input", () => {
-  const q = searchInput.value.toLowerCase();
-  const filtered = (window.tokensData || []).filter(t =>
-    t.name.toLowerCase().includes(q) || t.symbol.toLowerCase().includes(q)
-  );
-  displayTokens(filtered);
-});
+function bindSearchFilter() {
+  DOM.searchInput.addEventListener("input", () => {
+    const q = DOM.searchInput.value.toLowerCase();
+    const filtered = (window.tokensData || []).filter(t =>
+      t.name.toLowerCase().includes(q) || t.symbol.toLowerCase().includes(q)
+    );
+    displayTokens(filtered);
+  });
+}
 
-// 🚀 初始載入 & 自動刷新每 60 秒
-loadTokensFromAPI();
-setInterval(loadTokensFromAPI, 60000);
+// 🧠 初始化與自動刷新
+function init() {
+  fetchMarketData();
+  setInterval(fetchMarketData, 60000);
+  bindSearchFilter();
+}
+
+init();
