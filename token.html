@@ -2,27 +2,76 @@
 <html lang="zh-Hant">
 <head>
   <meta charset="UTF-8">
-  <title>MCP 詳頁分析</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="styles.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/chartist@0.11.4/dist/chartist.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/chartist@0.11.4/dist/chartist.min.js"></script>
-  <script src="token.js" defer></script>
+  <title>MCP 詳細分析</title>
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/chartist/dist/chartist.min.css">
 </head>
-<body class="bg-gray-950 text-white font-sans">
+<body>
+  <h1 class="section-title">📊 幣種詳情分析</h1>
+  <div id="token-detail"></div>
 
-  <header class="text-center p-6 border-b border-gray-800">
-    <h1 class="text-3xl font-bold text-yellow-400">🔍 MCP 詳頁分析</h1>
-    <p class="text-sm text-gray-400 mt-1">單幣分析 × AI 評估 × 類似推薦</p>
-  </header>
+  <script src="https://cdn.jsdelivr.net/npm/chartist"></script>
+  <script>
+    const params = new URLSearchParams(location.search);
+    const tokenId = params.get("id");
+    let allTokens = [];
 
-  <main class="max-w-4xl mx-auto px-4 py-6" id="token-detail">
-    <p class="text-sm text-gray-400">⏳ 正在載入代幣資料...</p>
-  </main>
+    async function init() {
+      const res = await fetch("tokens.json");
+      allTokens = await res.json();
+      const token = allTokens.find(t => t.id === tokenId);
+      if (!token) return showError("❌ 找不到代幣資料");
+      renderToken(token);
+    }
 
-  <footer class="text-center text-gray-600 text-xs py-4 border-t border-gray-800">
-    MCP 控制台 © 2025. Powered by ai-ia.win
-  </footer>
+    function renderToken(token) {
+      const score = calcScore(token.total_volume, token.price_change_percentage_24h);
+      const advice = getAdvice(score);
+      document.getElementById("token-detail").innerHTML = `
+        <h2>${token.name} (${token.symbol})</h2>
+        <p>成交量：$${token.total_volume.toLocaleString()}</p>
+        <p>24h 漲跌：<span class="${token.price_change_percentage_24h >= 0 ? 'text-green-400' : 'text-red-400'}">
+          ${token.price_change_percentage_24h.toFixed(2)}%</span></p>
+        <p class="ai-advice">🧠 AI 分析：${advice}</p>
+        <div class="ct-chart" id="price-chart"></div>
+        <br>
+        <button onclick="location.href='index.html'">← 返回控制台</button>
+      `;
+      renderChart(token);
+    }
 
+    function renderChart(token) {
+      const base = token.price_change_percentage_24h ?? 0;
+      const mock = [100, 100 + base, 100 - base / 2, 100 + base * 0.8, 100 + base];
+      new Chartist.Line('#price-chart', {
+        labels: ['週一','週二','週三','週四','週五'],
+        series: [mock]
+      }, {
+        showArea: true,
+        fullWidth: true,
+        chartPadding: { right: 40 },
+        lineSmooth: Chartist.Interpolation.cardinal({ tension: 0.4 })
+      });
+    }
+
+    function calcScore(volume, change) {
+      const v = Math.min(volume / 1e9, 2);
+      const c = change / 5;
+      return parseFloat(Math.max(5, Math.min(10, (v + c) * 1.5)).toFixed(1));
+    }
+
+    function getAdvice(score) {
+      if (score >= 8.5) return "📈 技術強勁、交易量活躍，短期看多";
+      if (score <= 6) return "🧐 價格震盪大、量能不足，建議觀察";
+      return "🌿 穩定中，中長線持有建議";
+    }
+
+    function showError(msg) {
+      document.getElementById("token-detail").innerHTML = `<p class="alert-banner">${msg}</p>`;
+    }
+
+    init();
+  </script>
 </body>
 </html>
