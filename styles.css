@@ -4,45 +4,16 @@ body {
   color: white;
 }
 
-.filter-tab {
-  background-color: #1f1f2e;
-  padding: 8px 12px;
-  border-radius: 8px;
-  cursor: pointer;
-  border: 1px solid #333;
-}
-.filter-tab.active {
-  background-color: #00ffcc;
-  color: #000;
-  font-weight: bold;
-}
-
-.card {
-  position: relative; /* 必要讓角標定位成功 */
-  ...
-}
-
-.trend-score {
-  position: absolute;
-  top: 16px;
-  right: 16px;
-  background: #00ffcc;
-  color: #000;
-  font-size: 12px;
-  padding: 4px 8px;
-  border-radius: 6px;
-  font-weight: bold;
-}
-
-.card {
+.card, .recommend-card {
   background-color: #1c1c2b;
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255,255,255,0.05);
   border-radius: 12px;
   padding: 20px;
   transition: transform 0.3s ease;
   position: relative;
+  cursor: pointer;
 }
-.card:hover {
+.card:hover, .recommend-card:hover {
   transform: scale(1.03);
   box-shadow: 0 0 10px #00ffcc55;
 }
