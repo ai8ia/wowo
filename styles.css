@@ -1,19 +1,19 @@
-/* 🌑 主題配色 */
+/* 🌌 背景與主體字型 */
 body {
   margin: 0;
   padding: 0;
   background-color: #0e0e1a;
-  color: #ffffff;
+  color: #fff;
   font-family: 'Segoe UI', 'Helvetica Neue', sans-serif;
 }
 
-/* 📍 版面標題 */
+/* 🪐 MCP 主標題 */
 .section-title {
-  font-size: 1.5rem;
+  font-size: 1.8rem;
   font-weight: bold;
-  color: #facc15;
-  margin: 1rem 0;
+  color: #00ffd0;
   text-align: center;
+  margin-bottom: 1.5rem;
 }
 
 /* 🔍 搜尋欄 */
@@ -22,17 +22,18 @@ body {
   color: #fff;
   border: none;
   padding: 12px 18px;
-  border-radius: 12px;
+  border-radius: 14px;
   font-size: 15px;
   width: 260px;
-  transition: box-shadow 0.3s ease;
+  transition: box-shadow 0.3s ease, transform 0.2s ease;
 }
 .search-input:focus {
   outline: none;
   box-shadow: 0 0 10px #00ffcc80;
+  transform: scale(1.03);
 }
 
-/* 🧱 卡片排版 */
+/* 🎯 卡片容器 */
 .card-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -40,56 +41,91 @@ body {
   padding-bottom: 2rem;
 }
 
-/* 🔧 卡片樣式 */
+/* 🧱 幣種卡片 */
 .card, .recommend-card {
-  background: #1c1c2b;
+  position: relative;
+  background: linear-gradient(145deg, #1a1a2a, #11111d);
   padding: 20px;
-  border-radius: 12px;
-  border: 1px solid #333;
+  border-radius: 16px;
+  border: 1px solid #2c2c3c;
+  box-shadow: 0 4px 12px rgba(0, 255, 204, 0.08);
   transition: transform 0.3s ease;
 }
 .card:hover, .recommend-card:hover {
-  transform: scale(1.02);
+  transform: scale(1.025);
 }
 
-/* 🔥 熱度分數 */
+/* 🔥 趨勢分數徽章 */
 .trend-score {
   position: absolute;
-  top: 12px;
+  top: 10px;
   right: 12px;
   background: #00ffcc;
   color: #000;
   font-size: 12px;
-  padding: 4px 6px;
+  padding: 4px 8px;
   border-radius: 6px;
   font-weight: bold;
+  box-shadow: 0 0 6px #00ffcc60;
 }
 
 /* 📊 詳頁統計區塊 */
 .stat {
-  background: #1a1a2a;
+  background: #1e1e2e;
   padding: 12px;
   border-radius: 8px;
   font-size: 14px;
   color: #ccc;
   text-align: center;
+  border: 1px solid #333;
 }
 
-/* ⏳ Loading & Refresh 提示 */
+/* ⏳ 更新狀態提示 */
 .refresh-banner, .loading {
   font-size: 14px;
   text-align: center;
-  margin-bottom: 1rem;
+  margin: 1rem 0;
   color: #00ffcc;
 }
 
-/* 📈 圖表樣式（Chartist） */
+/* 📈 圖表容器（Chartist） */
 .ct-chart {
   background-color: #181818;
   padding: 12px;
   border-radius: 8px;
+  border: 1px solid #333;
 }
 .ct-label {
   color: #bbb;
   font-size: 12px;
+}
+
+/* 🚨 預警提示 */
+.alert-banner {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 99;
+  padding: 8px 16px;
+  background-color: #ff0033;
+  color: #fff;
+  border-radius: 6px;
+  font-weight: bold;
+  animation: shake 0.4s ease;
+}
+@keyframes shake {
+  0% { transform: translateX(-2px); }
+  25% { transform: translateX(2px); }
+  50% { transform: translateX(-2px); }
+  75% { transform: translateX(2px); }
+  100% { transform: translateX(0); }
+}
+
+/* 🧠 AI 評估訊息樣式 */
+.ai-advice {
+  font-size: 13px;
+  color: #a0f0ff;
+  font-style: italic;
+  margin-top: 6px;
 }
