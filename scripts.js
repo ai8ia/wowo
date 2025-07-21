@@ -49,6 +49,9 @@ function displayRecommended(recommended) {
 
 async function loadTokensFromAPI() {
   try {
+    document.getElementById("token-loading").textContent = "⏳ 正在同步資料…";
+    document.getElementById("refresh-banner").textContent = "📡 MCP 資料更新中…";
+
     const res = await fetch("https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=volume_desc&per_page=30");
     const data = await res.json();
 
@@ -62,18 +65,21 @@ async function loadTokensFromAPI() {
     }));
 
     window.tokensData = tokens;
-    const recommended = getRecommendedTokens(tokens);
 
+    const recommended = getRecommendedTokens(tokens);
     displayTokens(tokens);
     displayRecommended(recommended);
-
     localStorage.setItem("mcpRecommended", JSON.stringify(recommended.map(t => t.id)));
+
+    document.getElementById("token-loading").textContent = "";
+    document.getElementById("refresh-banner").textContent = `✅ 資料已更新 (${new Date().toLocaleTimeString()})`;
   } catch (err) {
     tokenList.innerHTML = `<p class="text-red-400">⚠️ 資料載入失敗，請稍後重試。</p>`;
     console.error("📡 API 錯誤", err);
   }
 }
 
+// 搜尋功能
 searchInput.addEventListener("input", () => {
   const q = searchInput.value.toLowerCase();
   const filtered = (window.tokensData || []).filter(t =>
@@ -82,4 +88,6 @@ searchInput.addEventListener("input", () => {
   displayTokens(filtered);
 });
 
+// 🚀 初始載入 & 自動刷新每 60 秒
 loadTokensFromAPI();
+setInterval(loadTokensFromAPI, 60000);
