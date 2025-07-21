@@ -48,26 +48,35 @@ function displayRecommended(recommended) {
 }
 
 async function loadTokensFromAPI() {
-  const res = await fetch("https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=volume_desc&per_page=30");
-  const data = await res.json();
+  try {
+    const res = await fetch("https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=volume_desc&per_page=30");
+    const data = await res.json();
 
-  const tokens = data.map(t => ({
-    id: t.id,
-    name: t.name,
-    symbol: t.symbol.toUpperCase(),
-    volume: t.total_volume || 0,
-    change: t.price_change_percentage_24h || 0,
-    score: calculateTrendScore(t.total_volume || 0, t.price_change_percentage_24h || 0).toFixed(1)
-  }));
+    const tokens = data.map(t => ({
+      id: t.id,
+      name: t.name,
+      symbol: t.symbol.toUpperCase(),
+      volume: t.total_volume || 0,
+      change: t.price_change_percentage_24h || 0,
+      score: calculateTrendScore(t.total_volume || 0, t.price_change_percentage_24h || 0).toFixed(1)
+    }));
 
-  window.tokensData = tokens;
-  displayTokens(tokens);
-  displayRecommended(getRecommendedTokens(tokens));
+    window.tokensData = tokens;
+    const recommended = getRecommendedTokens(tokens);
+
+    displayTokens(tokens);
+    displayRecommended(recommended);
+
+    localStorage.setItem("mcpRecommended", JSON.stringify(recommended.map(t => t.id)));
+  } catch (err) {
+    tokenList.innerHTML = `<p class="text-red-400">⚠️ 資料載入失敗，請稍後重試。</p>`;
+    console.error("📡 API 錯誤", err);
+  }
 }
 
 searchInput.addEventListener("input", () => {
   const q = searchInput.value.toLowerCase();
-  const filtered = window.tokensData.filter(t =>
+  const filtered = (window.tokensData || []).filter(t =>
     t.name.toLowerCase().includes(q) || t.symbol.toLowerCase().includes(q)
   );
   displayTokens(filtered);
