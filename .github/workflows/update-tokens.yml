@@ -1,0 +1,33 @@
+name: 更新代幣資料
+
+on:
+  schedule:
+    - cron: '0 1 * * *' # 每天 01:00 UTC 執行（可調整）
+  workflow_dispatch: # 可手動觸發
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 取得 repo
+        uses: actions/checkout@v3
+
+      - name: 安裝 Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: 安裝依賴
+        run: npm install axios
+
+      - name: 執行更新腳本
+        run: node save-tokens.js
+
+      - name: Commit 並推送更新
+        run: |
+          git config --global user.name 'MCP-Actions'
+          git config --global user.email 'mcp@bot.com'
+          git add tokens.json
+          git commit -m '🧬 自動更新 tokens.json'
+          git push
