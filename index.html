@@ -2,39 +2,33 @@
 <html lang="zh-Hant">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MCP 控制台</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="styles.css">
   <script src="scripts.js" defer></script>
 </head>
 <body class="bg-gray-950 text-white font-sans">
-  <!-- 🟡 Header -->
   <header class="text-center p-6 border-b border-gray-800">
     <h1 class="text-3xl font-bold text-yellow-400">📊 MCP 控制台</h1>
     <p class="text-sm text-gray-400 mt-1">AI 熱度分析 × 即時排行 × 智慧推薦</p>
   </header>
 
-  <!-- 🏗️ Main Area -->
   <main class="max-w-6xl mx-auto px-4 py-6">
-    <!-- 🔍 控制列 -->
     <section class="mb-8 flex flex-wrap gap-4 justify-center">
-      <input type="text" id="token-search" placeholder="🔎 搜尋代幣" class="bg-gray-800 p-2 rounded w-64">
+      <input type="text" id="token-search" placeholder="🔎 搜尋代幣" class="search-input">
     </section>
 
-    <!-- 📈 排行模組 -->
     <section>
-      <h2 class="text-xl font-bold text-yellow-400 mb-4">📈 即時排行</h2>
-      <div id="token-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+      <h2 class="section-title">📈 即時排行</h2>
+      <div id="token-list" class="card-grid"></div>
     </section>
 
-    <!-- 🧠 推薦模組 -->
     <section class="mt-10">
-      <h2 class="text-xl font-bold text-yellow-400 mb-4">🧠 MCP 推薦幣種</h2>
-      <div id="recommended-coins" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+      <h2 class="section-title">🧠 MCP 推薦幣種</h2>
+      <div id="recommended-coins" class="card-grid"></div>
     </section>
   </main>
 
-  <!-- ⚙️ Footer -->
   <footer class="text-center text-gray-600 text-xs py-4 border-t border-gray-800">
     MCP 控制台 © 2025. Powered by ai-ia.win
   </footer>
