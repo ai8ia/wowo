@@ -35,7 +35,8 @@ function displayRecommended(recommended) {
       <p>Change: <span class="${token.change >= 0 ? 'text-green-400' : 'text-red-400'}">
         ${token.change.toFixed(2)}%</span></p>
     `;
-    div.onclick = () => window.open(`https://www.coingecko.com/en/coins/${token.id}`, "_blank");
+    div.onclick = () => window.location.href = `token.html?id=${token.id}`;
+
     recoContainer.appendChild(div);
   });
 }
