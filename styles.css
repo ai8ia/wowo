@@ -18,6 +18,14 @@ body {
   box-shadow: 0 0 10px #00ffcc55;
 }
 
+.stat {
+  background-color: #1c1c2b;
+  padding: 12px;
+  border-radius: 8px;
+  text-align: center;
+  font-size: 14px;
+}
+
 .trend-score {
   position: absolute;
   top: 16px;
