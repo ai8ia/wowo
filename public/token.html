@@ -1,1 +1,58 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MCP 控制台｜幣種分析圖表</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <section class="token-chart-section">
+    <h2 id="symbol-title">SOL - 趨勢分析</h2>
+    <canvas id="priceChart"></canvas>
+    <canvas id="volumeChart"></canvas>
+    <canvas id="scoreChart"></canvas>
+  </section>
+
+  <script>
+    async function loadChartData(symbol) {
+      const res = await fetch(`../src/chart-data/${symbol}.json`);
+      const data = await res.json();
+
+      const ctxPrice = document.getElementById("priceChart").getContext("2d");
+      new Chart(ctxPrice, {
+        type: "line",
+        data: {
+          labels: data.labels,
+          datasets: [{ label: "價格", data: data.price, borderColor: "gold" }]
+        }
+      });
+
+      const ctxVolume = document.getElementById("volumeChart").getContext("2d");
+      new Chart(ctxVolume, {
+        type: "bar",
+        data: {
+          labels: data.labels,
+          datasets: [{ label: "成交量", data: data.volume, backgroundColor: "steelblue" }]
+        }
+      });
+
+      const ctxScore = document.getElementById("scoreChart").getContext("2d");
+      new Chart(ctxScore, {
+        type: "line",
+        data: {
+          labels: data.labels,
+          datasets: [{ label: "趨勢分數", data: data.score, borderColor: "limegreen" }]
+        }
+      });
+
+      document.getElementById("symbol-title").innerText = `${symbol.toUpperCase()} - 趨勢分析`;
+    }
+
+    loadChartData("solana"); // 可改成 pengu / om 等幣種名稱
+  </script>
+</body>
+</html>
 
