@@ -4,46 +4,47 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>MCP 控制台</title>
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="/styles.css" />
 </head>
-<body class="bg-gray-950 text-white font-inter p-6">
+<body>
+  <h1 class="section-title">🚀 MCP 控制台</h1>
+  <input type="text" class="search-input" placeholder="🔍 搜尋幣種…" />
 
-  <!-- 控制面板 -->
-  <section class="flex items-center gap-4 mb-4">
-    <select id="data-source" class="bg-gray-800 text-white p-2 rounded">
-      <option value="gecko">CoinGecko</option>
-      <option value="cmc">CoinMarketCap</option>
-    </select>
-    <span id="refresh-banner" class="text-yellow-300"></span>
-    <div class="ml-auto text-sm">
-      ⏱️ 每 60 秒自動更新
-    </div>
-  </section>
+  <div class="card-grid" id="token-list"></div>
 
-  <!-- 即時價格區 -->
-  <section class="mb-6">
-    <h2 class="text-xl font-bold text-yellow-400">BTC 即時價格</h2>
-    <p id="live-price" class="text-green-300 text-2xl font-bold mt-2">$--</p>
-  </section>
+  <script>
+    let allTokens = [];
 
-  <!-- 搜尋與列表 -->
-  <section class="mb-6">
-    <input type="search" id="token-search"
-      placeholder="🔍 搜尋幣種…" class="w-full p-3 bg-gray-800 text-white rounded" />
-  </section>
+    async function loadTokens() {
+      const res = await fetch("tokens.json");
+      allTokens = await res.json();
+      renderList(allTokens);
+    }
 
-  <!-- 幣種清單 -->
-  <section id="token-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8"></section>
+    function renderList(tokens) {
+      const container = document.getElementById("token-list");
+      container.innerHTML = "";
+      tokens.forEach(t => {
+        const score = calcScore(t.total_volume, t.price_change_percentage_24h);
+        container.innerHTML += `
+          <div class="card" onclick="location.href='token.html?id=${t.id}'">
+            <h2>${t.name} (${t.symbol})</h2>
+            <p>成交量：$${t.total_volume.toLocaleString()}</p>
+            <p>24h 漲跌：<span class="${t.price_change_percentage_24h >= 0 ? 'text-green-400' : 'text-red-400'}">
+              ${t.price_change_percentage_24h.toFixed(2)}%</span></p>
+            <span class="trend-score">${score}</span>
+          </div>
+        `;
+      });
+    }
 
-  <!-- 推薦幣種 -->
-  <section>
-    <h3 class="text-lg font-bold text-yellow-300 mb-2">🔗 推薦幣種</h3>
-    <div id="recommended-coins" class="grid gap-4"></div>
-  </section>
+    function calcScore(volume, change) {
+      const v = Math.min(volume / 1e9, 2);
+      const c = change / 5;
+      return parseFloat(Math.max(5, Math.min(10, (v + c) * 1.5)).toFixed(1));
+    }
 
-  <!-- 更新狀態 -->
-  <div id="token-loading" class="text-yellow-400 mt-4"></div>
-
-  <script src="scripts.js" defer></script>
+    loadTokens();
+  </script>
 </body>
 </html>
