@@ -104,6 +104,7 @@ async function loadTokenDetail(id) {
 
   } catch (err) {
     console.error("🔴 MCP 詳頁載入錯誤:", err);
+    console.error("🔴 錯誤原因：", err);
     detailContainer.innerHTML = `<p class="text-red-400">⚠️ 資料載入失敗，請檢查代幣 ID 是否正確。</p>`;
   }
 }
