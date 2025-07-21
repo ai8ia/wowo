@@ -69,9 +69,7 @@ async function loadTokenDetail(id) {
       showArea: true,
       fullWidth: true,
       chartPadding: { right: 20 },
-      axisX: {
-        labelInterpolationFnc: (val, i) => i % 2 === 0 ? val : null
-      }
+      axisX: { labelInterpolationFnc: (val, i) => i % 2 === 0 ? val : null }
     });
 
     const similar = await getRecommendedFromStorage(id);
