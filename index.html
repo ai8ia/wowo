@@ -1,28 +1,58 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MCP 控制台</title>
-  <link rel="stylesheet" href="styles.css" />
-</head>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MCP 控制台</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="icon" href="favicon.ico" />
+  </head>
+  <body>
+    <header class="text-center py-6">
+      <img src="assets/mcp-logo.svg" alt="MCP Logo" class="logo" />
+      <h1 class="text-2xl font-bold text-yellow-300 mt-2">🧠 MCP 控制台 v1.9</h1>
+      <p class="text-sm text-gray-400">推薦艦橋 · 加密分析 · 自動化更新 · 收藏模組</p>
+    </header>
 
-<body>
-  <!-- 排版選單懸浮面板 -->
-  <div class="layout-panel" style="position: fixed; top: 20px; right: 20px; z-index: 999;">
-    <button data-layout="grid">🧊 Grid 模式</button>
-    <button data-layout="list">📋 List 模式</button>
-    <button data-layout="scroll">🔃 Scroll 模式</button>
-  </div>
+    <main class="max-w-4xl mx-auto px-4">
+      <input type="text" id="search" placeholder="🔍 搜尋幣種名稱或代號" class="search-bar" />
 
-  <!-- 卡片容器結構 -->
-  <div class="card-container">
-    <div class="card">🚀 Alpha-X · 加密分析模組</div>
-    <div class="card">🧠 Nova-Y · 自動化指標模組</div>
-    <div class="card">🎴 Omega-Z · 收藏 NFT 卡片</div>
-  </div>
+      <section class="mt-6">
+        <h2 class="section-title">🚀 推薦幣種</h2>
+        <div id="recommended-list" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div>
+      </section>
 
-  <!-- 排版切換腳本模組 -->
-  <script src="src/layout-toggle.js"></script>
-</body>
+      <section class="mt-6">
+        <h2 class="section-title">📊 所有代幣</h2>
+        <div id="token-list" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+      </section>
+
+      <section class="mt-8">
+        <h2 class="text-yellow-400 text-xl font-bold">🎴 我的收藏艦橋</h2>
+        <select id="theme-selector" style="margin:12px;">
+          <option value="starship">🛰️ 星艦型</option>
+          <option value="retro">💾 資料磁片型</option>
+          <option value="chip">🧬 AI 晶片型</option>
+        </select>
+        <button onclick="clearFavorites()" style="margin:12px">🗑️ 清空收藏艦橋</button>
+        <div id="favorites-deck" class="nft-grid"></div>
+      </section>
+
+      <section id="status" class="mt-6 text-xs text-gray-500 text-center">🔄 正在載入中…</section>
+      <section id="version-info" class="mt-3 text-xs text-gray-500 text-center">
+        <p>🧬 正在解析版本資訊…</p>
+      </section>
+      <section id="loading" class="mt-3 text-center text-sm text-gray-500"></section>
+    </main>
+
+    <footer class="text-center mt-12 mb-6 text-xs text-gray-400">
+      <p>👾 Powered by MCP Deck · GitHub Actions · CoinGecko API</p>
+    </footer>
+
+    <!-- JS 模組載入順序 -->
+    <script src="scripts.js"></script>
+    <script src="src/alert.js"></script>
+    <script src="src/homepage-branding.js"></script>
+    <script src="src/recommend-nft.js"></script>
+  </body>
 </html>
