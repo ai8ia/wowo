@@ -93,6 +93,19 @@
   padding: 40px 20px;
 }
 
+.layout-list .card-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.layout-scroll .card-container {
+  display: flex;
+  flex-direction: row;
+  overflow-x: auto;
+  gap: 20px;
+}
+
 
 /* 📦 一般卡片與推薦卡樣式 */
 .card, .recommend-card {
