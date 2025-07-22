@@ -1,98 +1,4 @@
-body {
-  font-family: 'Segoe UI', sans-serif;
-  background-color: #0c0c0e;
-  color: #f0f0f0;
-  margin: 0;
-  padding: 0;
-}
-
-header {
-  background-color: #111118;
-  border-bottom: 1px solid #333;
-}
-
-.logo {
-  width: 72px;
-  height: 72px;
-  margin: 0 auto;
-  display: block;
-  filter: drop-shadow(0 0 6px #ffcc33);
-  animation: pulse 2s infinite ease-in-out;
-}
-
-@keyframes pulse {
-  0% { filter: drop-shadow(0 0 6px #ffcc33); }
-  50% { filter: drop-shadow(0 0 12px #ffd700); }
-  100% { filter: drop-shadow(0 0 6px #ffcc33); }
-}
-
-/* Grid 田字型排版 */
-.layout-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 16px;
-  padding-top: 12px;
-}
-
-/* List 單欄直排 */
-.layout-list > .card,
-.layout-list > .recommend-card,
-.layout-list > .nft-card {
-  width: 100%;
-  margin-bottom: 12px;
-}
-
-/* Scroll 橫向滑動 */
-.layout-scroll {
-  display: flex;
-  overflow-x: auto;
-  gap: 16px;
-  padding-bottom: 12px;
-}
-.layout-scroll::-webkit-scrollbar {
-  height: 6px;
-}
-.layout-scroll::-webkit-scrollbar-thumb {
-  background: #888;
-  border-radius: 3px;
-}
-
-
-h1, h2 {
-  color: #ffd700;
-  text-align: center;
-}
-
-.search-bar {
-  display: block;
-  width: 100%;
-  max-width: 320px;
-  padding: 8px 12px;
-  margin: 0 auto 12px;
-  border-radius: 6px;
-  border: 1px solid #555;
-  background-color: #1c1c1f;
-  color: #fff;
-}
-
-.alert-card {
-  position: fixed;
-  top: 24px;
-  right: 24px;
-  background-color: #ff4444;
-  color: white;
-  padding: 10px 16px;
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(255,0,0,0.3);
-  font-weight: bold;
-  z-index: 999;
-  animation: fadeIn 0.3s ease;
-}
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
+/* 🎴 NFT 收藏卡片樣式 */
 .nft-grid {
   display: flex;
   flex-wrap: wrap;
@@ -109,6 +15,8 @@ h1, h2 {
 .nft-card:hover {
   transform: scale(1.03) rotate(-0.5deg);
 }
+
+/* 🧠 收藏按鈕樣式 */
 .favorite-btn {
   margin-top: 8px;
   background: #222;
@@ -119,59 +27,73 @@ h1, h2 {
   cursor: pointer;
   font-size: 14px;
 }
-
-.card, .recommend-card {
-  background-color: #1a1a22;
-  border: 1px solid #2d2d35;
-  padding: 12px 16px;
-  border-radius: 8px;
-  box-shadow: 0 0 6px rgba(255, 255, 255, 0.05);
+.favorite-btn:hover {
+  background: #444;
 }
 
-.trend-score {
-  margin-top: 6px;
-  font-weight: bold;
-  font-size: 0.85rem;
-  color: #ffaa00;
-}
-
-.recommend-card {
-  background-color: #222228;
-  border-color: #444;
-  transition: transform 0.2s ease-in-out;
-}
-
-.recommend-card:hover {
-  transform: scale(1.03);
-  box-shadow: 0 0 10px rgba(255, 255, 255, 0.08);
-}
-
-.section-title {
-  font-size: 1.2rem;
-  font-weight: bold;
-  margin: 16px 0 8px;
-  text-align: center;
-}
-
-.grid {
+/* 🔲 Grid 田字型排版 */
+.layout-grid {
   display: grid;
-  gap: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
 }
 
-.grid-cols-1 {
-  grid-template-columns: repeat(1, 1fr);
+/* 📄 List 單欄直排 */
+.layout-list > .card,
+.layout-list > .recommend-card,
+.layout-list > .nft-card {
+  width: 100%;
+  margin-bottom: 12px;
 }
 
-.grid-cols-2 {
-  grid-template-columns: repeat(2, 1fr);
+/* 🎛️ Scroll 橫向滑動 */
+.layout-scroll {
+  display: flex;
+  overflow-x: auto;
+  gap: 16px;
+  padding-bottom: 12px;
+}
+.layout-scroll::-webkit-scrollbar {
+  height: 6px;
+}
+.layout-scroll::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 3px;
 }
 
-.grid-cols-3 {
-  grid-template-columns: repeat(3, 1fr);
+/* 🧭 畫面配置懸浮選單 UI */
+.layout-panel {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  background: #222;
+  padding: 12px;
+  border-radius: 8px;
+  z-index: 999;
+  box-shadow: 0 0 12px rgba(0,0,0,0.4);
+}
+.layout-panel button {
+  margin: 4px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  background: #333;
+  color: #ffd700;
+  border: none;
+  cursor: pointer;
+}
+.layout-panel button:hover {
+  background: #555;
+  color: #fff;
 }
 
-@media screen and (max-width: 768px) {
-  .grid-cols-2, .grid-cols-3 {
-    grid-template-columns: repeat(1, 1fr);
-  }
+/* 📦 一般卡片與推薦卡樣式 */
+.card, .recommend-card {
+  background: #111;
+  border: 1px solid #333;
+  padding: 16px;
+  border-radius: 8px;
+  transition: transform 0.2s ease;
+}
+.card:hover, .recommend-card:hover {
+  transform: scale(1.02);
 }
