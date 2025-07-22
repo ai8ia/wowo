@@ -12,6 +12,8 @@ window.renderRecommendedCard = function(token, theme = "starship") {
   const ts = new Date().toLocaleString("zh-TW");
   const card = document.createElement("div");
   card.className = "nft-card";
+const theme = localStorage.getItem("themeMode") || "starship";
+tokenList.forEach(token => renderRecommendedCard(token, theme));
 
   const content = {
     starship: `<svg viewBox="0 0 320 180"><rect width="100%" height="100%" fill="#0b0f1a"/><text x="16" y="40" font-size="20" fill="#ffd700">${name}</text><text x="16" y="70" font-size="14" fill="#88f">${symbol}</text><text x="16" y="100" font-size="12" fill="#ccc">推薦時間：${ts}</text><circle cx="280" cy="60" r="30" fill="#222" stroke="#ffd700" stroke-width="2"/><text x="265" y="65" font-size="12" fill="#ffd700">${price_change_percentage_24h.toFixed(2)}%</text></svg>`,
