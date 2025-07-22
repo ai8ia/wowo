@@ -1,75 +1,107 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>MCP 控制台</title>
-    <link rel="stylesheet" href="styles.css" />
-    <link rel="icon" href="favicon.ico" />
-  </head>
-  <body class="layout-grid">
-    <header class="text-center py-6">
-      <img src="assets/mcp-logo.svg" alt="MCP Logo" class="logo" />
-      <h1 class="text-2xl font-bold text-yellow-300 mt-2">🧠 MCP 控制台 v1.9</h1>
-      <p class="text-sm text-gray-400">推薦艦橋 · 加密分析 · 自動化更新 · 收藏模組</p>
-    </header>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MCP 排版模組測試</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: sans-serif;
+      background: #0d0d0d;
+      color: #eee;
+    }
+    .layout-panel {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 999;
+    }
+    .layout-panel button {
+      margin: 6px;
+      padding: 8px 14px;
+      font-size: 14px;
+      background: #222;
+      color: #f6f6f6;
+      border: 1px solid #555;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .card-container {
+      margin: 80px auto;
+      padding: 20px;
+      max-width: 1200px;
+    }
+    .card {
+      background: #1a1a1a;
+      border: 1px solid #333;
+      border-radius: 8px;
+      padding: 20px;
+      font-size: 16px;
+      color: #ffd;
+      box-shadow: 0 0 6px #000;
+    }
 
-    <main class="max-w-4xl mx-auto px-4">
-      <input type="text" id="search" placeholder="🔍 搜尋幣種名稱或代號" class="search-bar" />
+    /* GRID 模式：田字型排版 */
+    .layout-grid .card-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 24px;
+    }
 
-      <section class="mt-6">
-        <h2 class="section-title">🚀 推薦幣種</h2>
-        <div id="recommended-list" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div>
-      </section>
+    /* LIST 模式：垂直堆疊 */
+    .layout-list .card-container {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
 
-<div class="card-container">
-  <div class="card">...</div>
-  <div class="card">...</div>
-  <!-- 更多卡片 -->
-</div>
+    /* SCROLL 模式：橫向滑動 */
+    .layout-scroll .card-container {
+      display: flex;
+      flex-direction: row;
+      overflow-x: auto;
+      gap: 20px;
+      scroll-behavior: smooth;
+    }
+    .layout-scroll .card {
+      min-width: 280px;
+      flex-shrink: 0;
+    }
+  </style>
+</head>
 
-      
-      <section class="mt-6">
-        <h2 class="section-title">📊 所有代幣</h2>
-        <div id="token-list" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
-      </section>
+<body>
+  <!-- 懸浮排版選單 -->
+  <div class="layout-panel">
+    <button data-layout="grid">🧊 Grid 模式</button>
+    <button data-layout="list">📋 List 模式</button>
+    <button data-layout="scroll">🔃 Scroll 模式</button>
+  </div>
 
-      <section class="mt-8">
-        <h2 class="text-yellow-400 text-xl font-bold">🎴 我的收藏艦橋</h2>
-        <select id="theme-selector" style="margin:12px;">
-          <option value="starship">🛰️ 星艦型</option>
-          <option value="retro">💾 資料磁片型</option>
-          <option value="chip">🧬 AI 晶片型</option>
-        </select>
-        <button onclick="clearFavorites()" style="margin:12px">🗑️ 清空收藏艦橋</button>
-        <div id="favorites-deck" class="nft-grid"></div>
-      </section>
+  <!-- 卡片容器 -->
+  <div class="card-container">
+    <div class="card">🚀 Alpha-X · 加密分析模組</div>
+    <div class="card">🧠 Nova-Y · 自動化指標模組</div>
+    <div class="card">🎴 Omega-Z · 收藏 NFT 卡片</div>
+  </div>
 
-      <section id="status" class="mt-6 text-xs text-gray-500 text-center">🔄 正在載入中…</section>
-      <section id="version-info" class="mt-3 text-xs text-gray-500 text-center">
-        <p>🧬 正在解析版本資訊…</p>
-      </section>
-      <section id="loading" class="mt-3 text-center text-sm text-gray-500"></section>
-    </main>
+  <script>
+    function setLayout(mode) {
+      document.body.classList.remove("layout-grid", "layout-list", "layout-scroll");
+      document.body.classList.add("layout-" + mode);
+      localStorage.setItem("layoutMode", mode);
+    }
 
-    <footer class="text-center mt-12 mb-6 text-xs text-gray-400">
-      <p>👾 Powered by MCP Deck · GitHub Actions · CoinGecko API</p>
-    </footer>
+    function initLayoutPanel() {
+      const saved = localStorage.getItem("layoutMode") || "grid";
+      setLayout(saved);
+      document.querySelectorAll("[data-layout]").forEach(button => {
+        button.onclick = () => setLayout(button.dataset.layout);
+      });
+    }
 
-    <!-- JS 模組載入順序 -->
-    <script src="scripts.js"></script>
-    <script src="src/alert.js"></script>
-    <script src="src/homepage-branding.js"></script>
-    <script src="src/recommend-nft.js"></script>
-    <script src="src/layout-toggle.js"></script>
-    
-
-<!-- 排版切換懸浮選單 -->
-<div class="layout-panel" style="position: fixed; top: 20px; right: 20px; z-index: 999;">
-  <button data-layout="grid">🧊 Grid 模式</button>
-  <button data-layout="list">📋 List 模式</button>
-  <button data-layout="scroll">🔃 Scroll 模式</button>
-</div>
-
-  </body>
+    window.onload = initLayoutPanel;
+  </script>
+</body>
 </html>
