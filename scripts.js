@@ -19,6 +19,19 @@ function calcScore(volume, change) {
   return parseFloat(Math.max(5, Math.min(10, (v + c) * 1.5)).toFixed(1));
 }
 
+function showUpdateTimestamp() {
+  const time = new Date();
+  const timestamp = time.toLocaleString("zh-TW", {
+    hour12: false,
+    timeZone: "Asia/Taipei"
+  });
+  const el = document.getElementById("update-time");
+  if (el) el.textContent = `📡 資料更新時間：${timestamp}`;
+}
+showUpdateTimestamp();
+
+
+
 // 🧠 AI 評估層
 function getAdvice(score) {
   if (score >= 8.5) return "📈 技術強勁、交易量活躍，短期看多";
