@@ -1,21 +1,50 @@
-/* 🌌 MCP 主橋基底樣式 */
+/* 🌌 全域主橋基底 */
 body {
   background: radial-gradient(circle at top left, #121229, #0d0d1a);
-  color: #f0f0f0;
+  color: #f2f2f2;
   font-family: 'Segoe UI', 'Noto Sans TC', sans-serif;
   margin: 0;
   padding: 0;
 }
 
-/* 🎴 主卡片容器區塊 */
-.card-container {
+/* 🎴 主要排版容器統一控制 */
+.layout-grid .card-container,
+.layout-grid #recommended-list,
+.layout-grid #token-list {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 24px;
-  padding: 40px 20px;
+  padding: 24px;
 }
 
-/* 💾 卡片樣式 */
+.layout-list .card-container,
+.layout-list #recommended-list,
+.layout-list #token-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 24px;
+}
+
+.layout-scroll .card-container,
+.layout-scroll #recommended-list,
+.layout-scroll #token-list {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  padding: 24px;
+}
+
+.layout-scroll .card,
+.layout-scroll #recommended-list .card,
+.layout-scroll #token-list .card {
+  min-width: 280px;
+  flex-shrink: 0;
+}
+
+/* 🧊 卡片樣式與 Glow 動效 */
 .card {
   background: #1a1a2a;
   color: #ffd;
@@ -30,7 +59,7 @@ body {
   box-shadow: 0 0 28px rgba(140,220,255,0.4);
 }
 
-/* 🧊 懸浮排版選單按鈕 */
+/* 🧭 排版與主題選單按鈕 */
 .layout-panel button,
 .theme-panel button {
   background-color: #202030;
@@ -51,28 +80,7 @@ body {
   box-shadow: 0 0 12px rgba(255,255,160,0.6);
 }
 
-/* 📋 List 模式 */
-.layout-list .card-container {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-/* 🔃 Scroll 模式 */
-.layout-scroll .card-container {
-  display: flex;
-  flex-direction: row;
-  overflow-x: auto;
-  gap: 20px;
-  scroll-behavior: smooth;
-}
-
-.layout-scroll .card {
-  min-width: 280px;
-  flex-shrink: 0;
-}
-
-/* 🌌 主題系統（galaxy / bridge / chip） */
+/* 🎨 主題背景樣式 */
 .theme-galaxy body {
   background: radial-gradient(circle at top, #121229, #0d0d1a);
   color: #f2f2f2;
@@ -88,10 +96,9 @@ body {
   color: #ffffcc;
 }
 
-/* 📄 卡片主題配色 */
+/* 🎨 主題卡片樣式 */
 .theme-galaxy .card {
   background: #1f1f2b;
-  color: #ffd;
   box-shadow: 0 0 18px rgba(120,180,255,0.25);
 }
 
@@ -116,9 +123,10 @@ body {
   border-radius: 6px;
   background-color: #1c1c2c;
   color: #fff;
+  margin-bottom: 20px;
 }
 
-/* 🧠 小標題樣式 */
+/* 📊 小標題樣式 */
 .section-title {
   font-size: 18px;
   color: #ffeb80;
