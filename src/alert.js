@@ -1,5 +1,6 @@
 // ⛑️ MCP 警示模組：偵測 ±10% 幣種漲跌並提示
-export function checkAlerts(tokens) {
+window.checkAlerts = function(tokens) {
+
   const warned = new Set(JSON.parse(localStorage.getItem("mcpAlerts") || "[]"));
 
   tokens.forEach(t => {
