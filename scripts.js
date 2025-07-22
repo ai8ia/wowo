@@ -24,6 +24,8 @@ function renderCard(t) {
     <p>成交量：$${parseInt(t.total_volume).toLocaleString()}</p>
     <p>24h 漲跌：<span class="${t.price_change_percentage_24h >= 0 ? 'text-green-400' : 'text-red-400'}">${t.price_change_percentage_24h.toFixed(2)}%</span></p>
     <p class="trend-score">分數：${calcScore(t.total_volume, t.price_change_percentage_24h)}</p>
+    renderNFTCard(token, "starship"); // 或 "retro", "chip"
+
   `;
   return el;
 }
