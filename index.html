@@ -68,6 +68,15 @@
     </section>
 
     <section id="loading" class="mt-3 text-center text-sm text-gray-500"></section>
+
+   <div class="sound-panel" style="text-align:center; margin-top:24px;">
+  <button onclick="soundDeck.setVolume(soundDeck.volume + 0.1)">🔊 加大音量</button>
+  <button onclick="soundDeck.setVolume(soundDeck.volume - 0.1)">🔉 降低音量</button>
+  <button onclick="soundDeck.mute()">🔇 靜音</button>
+  <button onclick="soundDeck.unmute()">🔔 解除靜音</button>
+  <button onclick="soundDeck.stop()">⛔ 停止播放</button>
+</div>
+
   </main>
 
   <!-- 👾 Footer 區塊 -->
