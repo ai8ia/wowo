@@ -7,6 +7,23 @@ window.saveToFavorites = function(token) {
   }
 };
 
+window.renderRecommendedCard = function(token, theme) {
+  const { name, symbol, price_change_percentage_24h } = token;
+  const ts = new Date().toLocaleString("zh-TW");
+  const card = document.createElement("div");
+  card.className = "nft-card";
+
+  const content = {
+    starship: `...`, // 可複製你原本的 SVG 模板（不含收藏時間）
+    retro: `...`,
+    chip: `...`
+  };
+
+  card.innerHTML = content[theme] || content["starship"];
+  document.getElementById("recommended-list").appendChild(card);
+};
+
+
 window.renderFavoritesDeck = function(theme = "starship") {
   const deck = document.getElementById("favorites-deck");
   deck.innerHTML = "";
