@@ -1,153 +1,134 @@
-/* 🎴 NFT 收藏卡片樣式 */
-.nft-grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 16px;
-  margin-top: 12px;
-}
-.nft-card {
-  width: 320px;
-  height: 180px;
-  border-radius: 12px;
-  box-shadow: 0 0 12px rgba(255,255,255,0.2);
-  transition: transform 0.3s ease;
-}
-.nft-card:hover {
-  transform: scale(1.03) rotate(-0.5deg);
+/* 🌌 MCP 主橋基底樣式 */
+body {
+  background: radial-gradient(circle at top left, #121229, #0d0d1a);
+  color: #f0f0f0;
+  font-family: 'Segoe UI', 'Noto Sans TC', sans-serif;
+  margin: 0;
+  padding: 0;
 }
 
-/* 🧠 收藏按鈕樣式 */
-.favorite-btn {
-  margin-top: 8px;
-  background: #222;
-  color: #ffd700;
-  border: none;
-  padding: 6px 12px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 14px;
-}
-.favorite-btn:hover {
-  background: #444;
-}
-
-/* 🔲 Grid 田字型排版 */
-.layout-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 16px;
-}
-
-/* 📄 List 單欄直排 */
-.layout-list > .card,
-.layout-list > .recommend-card,
-.layout-list > .nft-card {
-  width: 100%;
-  margin-bottom: 12px;
-}
-
-/* 🎛️ Scroll 橫向滑動 */
-.layout-scroll {
-  display: flex;
-  overflow-x: auto;
-  gap: 16px;
-  padding-bottom: 12px;
-}
-.layout-scroll::-webkit-scrollbar {
-  height: 6px;
-}
-.layout-scroll::-webkit-scrollbar-thumb {
-  background: #888;
-  border-radius: 3px;
-}
-
-/* 🧭 畫面配置懸浮選單 UI */
-.layout-panel {
-  position: fixed;
-  top: 16px;
-  right: 16px;
-  background: #222;
-  padding: 12px;
-  border-radius: 8px;
-  z-index: 999;
-  box-shadow: 0 0 12px rgba(0,0,0,0.4);
-}
-.layout-panel button {
-  margin: 4px;
-  padding: 6px 12px;
-  border-radius: 6px;
-  background: #333;
-  color: #ffd700;
-  border: none;
-  cursor: pointer;
-}
-.layout-panel button:hover {
-  background: #555;
-  color: #fff;
-}
-
-.layout-grid .card-container {
+/* 🎴 主卡片容器區塊 */
+.card-container {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 24px;
   padding: 40px 20px;
 }
 
+/* 💾 卡片樣式 */
+.card {
+  background: #1a1a2a;
+  color: #ffd;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 0 18px rgba(120,180,255,0.15);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  transform: scale(1.04);
+  box-shadow: 0 0 28px rgba(140,220,255,0.4);
+}
+
+/* 🧊 懸浮排版選單按鈕 */
+.layout-panel button,
+.theme-panel button {
+  background-color: #202030;
+  color: #ffeb80;
+  border: 1px solid #666;
+  border-radius: 6px;
+  padding: 8px 14px;
+  margin: 4px;
+  font-size: 14px;
+  box-shadow: 0 0 6px rgba(255,255,120,0.3);
+  cursor: pointer;
+  transition: box-shadow 0.3s ease, background-color 0.3s ease;
+}
+
+.layout-panel button:hover,
+.theme-panel button:hover {
+  background-color: #2f2f40;
+  box-shadow: 0 0 12px rgba(255,255,160,0.6);
+}
+
+/* 📋 List 模式 */
 .layout-list .card-container {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 16px;
 }
 
+/* 🔃 Scroll 模式 */
 .layout-scroll .card-container {
   display: flex;
   flex-direction: row;
   overflow-x: auto;
   gap: 20px;
+  scroll-behavior: smooth;
 }
 
-/* 🌌 銀河主題 */
+.layout-scroll .card {
+  min-width: 280px;
+  flex-shrink: 0;
+}
+
+/* 🌌 主題系統（galaxy / bridge / chip） */
 .theme-galaxy body {
-  background: radial-gradient(circle at top, #0f0f2e, #1a1a1a);
+  background: radial-gradient(circle at top, #121229, #0d0d1a);
   color: #f2f2f2;
 }
+
+.theme-bridge body {
+  background: linear-gradient(135deg, #1d1e2f, #292c3c);
+  color: #eee;
+}
+
+.theme-chip body {
+  background: linear-gradient(to bottom, #0d0d0d, #1a1a1a);
+  color: #ffffcc;
+}
+
+/* 📄 卡片主題配色 */
 .theme-galaxy .card {
   background: #1f1f2b;
   color: #ffd;
   box-shadow: 0 0 18px rgba(120,180,255,0.25);
 }
 
-/* 🛰️ 艦橋主題 */
-.theme-bridge body {
-  background: linear-gradient(135deg, #1d1e2f, #292c3c);
-  color: #eee;
-}
 .theme-bridge .card {
   background: #232536;
   color: #cfc;
   box-shadow: 0 0 16px rgba(0,255,200,0.2);
 }
 
-/* 🧬 晶片主題 */
-.theme-chip body {
-  background: linear-gradient(to bottom, #0d0d0d, #1a1a1a);
-  color: #ffffcc;
-}
 .theme-chip .card {
   background: #262626;
   color: #fcfccc;
   box-shadow: 0 0 16px rgba(255,255,160,0.25);
 }
 
-
-/* 📦 一般卡片與推薦卡樣式 */
-.card, .recommend-card {
-  background: #111;
-  border: 1px solid #333;
-  padding: 16px;
-  border-radius: 8px;
-  transition: transform 0.2s ease;
+/* 🔎 搜尋列樣式 */
+.search-bar {
+  width: 100%;
+  padding: 12px 16px;
+  font-size: 16px;
+  border: 1px solid #555;
+  border-radius: 6px;
+  background-color: #1c1c2c;
+  color: #fff;
 }
-.card:hover, .recommend-card:hover {
-  transform: scale(1.02);
+
+/* 🧠 小標題樣式 */
+.section-title {
+  font-size: 18px;
+  color: #ffeb80;
+  margin-bottom: 10px;
+}
+
+/* 👾 Footer 樣式 */
+footer {
+  text-align: center;
+  margin: 40px 0;
+  font-size: 12px;
+  color: #888;
 }
