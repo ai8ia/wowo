@@ -26,6 +26,38 @@ header {
   100% { filter: drop-shadow(0 0 6px #ffcc33); }
 }
 
+/* Grid 田字型排版 */
+.layout-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+  padding-top: 12px;
+}
+
+/* List 單欄直排 */
+.layout-list > .card,
+.layout-list > .recommend-card,
+.layout-list > .nft-card {
+  width: 100%;
+  margin-bottom: 12px;
+}
+
+/* Scroll 橫向滑動 */
+.layout-scroll {
+  display: flex;
+  overflow-x: auto;
+  gap: 16px;
+  padding-bottom: 12px;
+}
+.layout-scroll::-webkit-scrollbar {
+  height: 6px;
+}
+.layout-scroll::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 3px;
+}
+
+
 h1, h2 {
   color: #ffd700;
   text-align: center;
