@@ -8,14 +8,14 @@ const DOM = {
   version: document.getElementById("version-info")
 };
 
-// 📈 分數計算
+// 📈 趨勢分數計算公式
 function calcScore(volume, change) {
   const v = Math.min(volume / 1e9, 2);
   const c = change / 5;
   return parseFloat(Math.max(5, Math.min(10, (v + c) * 1.5)).toFixed(1));
 }
 
-// 📄 渲染卡片
+// 📄 渲染幣種卡片
 function renderCard(t) {
   const el = document.createElement("div");
   el.className = "card";
@@ -28,7 +28,14 @@ function renderCard(t) {
   return el;
 }
 
-// 🧬 渲染推薦
+// 🔍 推薦邏輯
+function getRecommendations(tokens) {
+  return tokens
+    .filter(t => calcScore(t.total_volume, t.price_change_percentage_24h) >= 8)
+    .slice(0, 3);
+}
+
+// 📊 渲染推薦卡片
 function renderReco(t) {
   const el = document.createElement("div");
   el.className = "recommend-card";
@@ -40,7 +47,7 @@ function renderReco(t) {
   return el;
 }
 
-// 🔎 搜尋事件
+// 🔎 搜尋事件綁定
 DOM.search.addEventListener("input", () => {
   const q = DOM.search.value.toLowerCase();
   const filtered = (window.tokensData || []).filter(t =>
@@ -50,14 +57,7 @@ DOM.search.addEventListener("input", () => {
   render(filtered);
 });
 
-// 📊 推薦邏輯
-function getRecommendations(tokens) {
-  return tokens
-    .filter(t => calcScore(t.total_volume, t.price_change_percentage_24h) >= 8)
-    .slice(0, 3);
-}
-
-// 🧪 渲染總區塊
+// 🧪 渲染主區塊
 function render(tokens) {
   DOM.list.innerHTML = "";
   DOM.reco.innerHTML = "";
@@ -67,7 +67,7 @@ function render(tokens) {
   localStorage.setItem("mcpRecommended", JSON.stringify(recos.map(t => t.id)));
 }
 
-// 🚀 讀取 JSON
+// 🚀 載入 tokens.json
 async function fetchLocalData() {
   try {
     DOM.loading.textContent = "🔄 資料載入中…";
@@ -79,4 +79,32 @@ async function fetchLocalData() {
     DOM.loading.textContent = "";
     DOM.status.textContent = `✅ 共載入 ${tokens.length} 筆資料 · ${new Date().toLocaleTimeString("zh-TW")}`;
   } catch {
-    DOM.list.innerHTML = `<p class="text-red-400">❌ 載入失敗
+    DOM.list.innerHTML = `<p class="text-red-400">❌ 載入失敗</p>`;
+  }
+}
+
+// 🧬 顯示 version.json
+async function showVersionInfo() {
+  try {
+    const res = await fetch("version.json");
+    const info = await res.json();
+    const time = new Date(info.updatedAt).toLocaleString("zh-TW", {
+      hour12: false,
+      timeZone: "Asia/Taipei"
+    });
+    DOM.version.innerHTML = `
+      <p>🧬 MCP ${info.version} · 資料更新：${time}</p>
+      <p>📁 資料來源：${info.source} · 由 ${info.generatedBy}</p>
+    `;
+  } catch {
+    console.warn("⚠️ version.json 無法解析");
+  }
+}
+
+// 🔁 初始化並每 60 秒自動刷新
+fetchLocalData();
+showVersionInfo();
+setInterval(() => {
+  fetchLocalData();
+  showVersionInfo();
+}, 60000);
