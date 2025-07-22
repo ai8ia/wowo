@@ -13,4 +13,5 @@ function initLayoutPanel() {
   });
 }
 
-window.onload = initLayoutPanel;
+document.addEventListener("DOMContentLoaded", initLayoutPanel);
+
