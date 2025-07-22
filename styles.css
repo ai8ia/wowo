@@ -61,6 +61,32 @@ h1, h2 {
   to { opacity: 1; transform: translateY(0); }
 }
 
+.nft-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 12px;
+}
+.nft-card {
+  width: 320px;
+  height: 180px;
+  border-radius: 12px;
+  box-shadow: 0 0 12px rgba(255,255,255,0.2);
+  transition: transform 0.3s ease;
+}
+.nft-card:hover {
+  transform: scale(1.03) rotate(-0.5deg);
+}
+.favorite-btn {
+  margin-top: 8px;
+  background: #222;
+  color: #ffd700;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+}
 
 .card, .recommend-card {
   background-color: #1a1a22;
