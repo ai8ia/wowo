@@ -76,6 +76,9 @@ async function fetchLocalData() {
     const tokens = await res.json();
     window.tokensData = tokens;
     render(tokens);
+    import { checkAlerts } from "./src/alert.js";  
+checkAlerts(tokens);
+
     DOM.loading.textContent = "";
     DOM.status.textContent = `✅ 共載入 ${tokens.length} 筆資料 · ${new Date().toLocaleTimeString("zh-TW")}`;
   } catch {
