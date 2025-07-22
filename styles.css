@@ -106,6 +106,39 @@
   gap: 20px;
 }
 
+/* 🌌 銀河主題 */
+.theme-galaxy body {
+  background: radial-gradient(circle at top, #0f0f2e, #1a1a1a);
+  color: #f2f2f2;
+}
+.theme-galaxy .card {
+  background: #1f1f2b;
+  color: #ffd;
+  box-shadow: 0 0 18px rgba(120,180,255,0.25);
+}
+
+/* 🛰️ 艦橋主題 */
+.theme-bridge body {
+  background: linear-gradient(135deg, #1d1e2f, #292c3c);
+  color: #eee;
+}
+.theme-bridge .card {
+  background: #232536;
+  color: #cfc;
+  box-shadow: 0 0 16px rgba(0,255,200,0.2);
+}
+
+/* 🧬 晶片主題 */
+.theme-chip body {
+  background: linear-gradient(to bottom, #0d0d0d, #1a1a1a);
+  color: #ffffcc;
+}
+.theme-chip .card {
+  background: #262626;
+  color: #fcfccc;
+  box-shadow: 0 0 16px rgba(255,255,160,0.25);
+}
+
 
 /* 📦 一般卡片與推薦卡樣式 */
 .card, .recommend-card {
