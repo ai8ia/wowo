@@ -1,11 +1,51 @@
+// 🔊 MCP 控制台聲音模組
+window.soundDeck = {
+  audio: null,
+  volume: 0.7,
+  muted: false,
+  track: "assets/sound/mcp-bgm.mp3",
+
+  init() {
+    this.audio = new Audio(this.track);
+    this.audio.loop = true;
+    this.audio.volume = this.volume;
+    this.audio.play();
+  },
+
+  setVolume(v) {
+    this.volume = Math.min(Math.max(v, 0), 1);
+    this.audio.volume = this.volume;
+    this.audio.muted = false;
+    this.muted = false;
+  },
+
+  mute() {
+    this.audio.muted = true;
+    this.muted = true;
+  },
+
+  unmute() {
+    this.audio.muted = false;
+    this.audio.volume = this.volume;
+    this.muted = false;
+  },
+
+  stop() {
+    this.audio.pause();
+    this.audio.currentTime = 0;
+  }
+};
+
 // 🧠 MCP 控制台資料載入邏輯
 fetch("tokens.json")
   .then(r => r.json())
   .then(tokens => {
+    window.tokenList = tokens;
     render(tokens);
-    checkAlerts(tokens);         // 🚨 全域警示提示模組
-    renderFavoritesDeck();       // 🎴 NFT 收藏卡片渲染（預設主題）
+    checkAlerts(tokens);
+    renderFavoritesDeck(currentTheme);
     document.getElementById("loading").textContent = "";
+    soundDeck.init();
   });
 
 function render(tokens) {
@@ -23,7 +63,6 @@ function render(tokens) {
       <p class="trend-score">分數：${calcScore(t.total_volume, t.price_change_percentage_24h)}</p>
     `;
 
-    // 🧠 收藏按鈕模組
     const favBtn = document.createElement("button");
     favBtn.textContent = "🧠 收藏";
     favBtn.className = "favorite-btn";
@@ -33,20 +72,12 @@ function render(tokens) {
     grid.appendChild(el);
   }
 
-  // 🚀 推薦幣種篩選邏輯
   const top = tokens.filter(t => calcScore(t.total_volume, t.price_change_percentage_24h) >= 90);
   top.forEach(t => {
-    const el = document.createElement("div");
-    el.className = "recommend-card";
-    el.innerHTML = `
-      <h3 class="text-yellow-300 font-bold">${t.name} (${t.symbol})</h3>
-      <p>漲跌：${t.price_change_percentage_24h.toFixed(2)}%</p>
-      <p class="trend-score">推薦分數：${calcScore(t.total_volume, t.price_change_percentage_24h)}</p>
-    `;
-    recommend.appendChild(el);
+    const theme = window.currentTheme || "starship";
+    renderRecommendedCard(t, theme);
   });
 
-  // 📥 搜尋事件綁定
   search.oninput = e => {
     const keyword = e.target.value.toLowerCase();
     grid.innerHTML = "";
@@ -54,19 +85,16 @@ function render(tokens) {
           .forEach(renderCard);
   };
 
-  // 📦 預設渲染所有幣種卡片
   tokens.forEach(renderCard);
 }
 
-// 🔢 推薦分數算法：成交量 + 漲跌加權
 function calcScore(volume, change) {
   const v = Math.log10(volume);
   const pct = Math.abs(change);
   return Math.round(v * 10 + pct);
 }
 
-// 🎨 NFT 收藏主題切換邏輯
-let currentTheme = "starship";
+let currentTheme = localStorage.getItem("themeMode") || "starship";
 document.getElementById("theme-selector").onchange = e => {
   currentTheme = e.target.value;
   renderFavoritesDeck(currentTheme);
