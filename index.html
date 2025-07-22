@@ -3,75 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MCP 排版模組測試</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: sans-serif;
-      background: #0d0d0d;
-      color: #eee;
-    }
-    .layout-panel {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      z-index: 999;
-    }
-    .layout-panel button {
-      margin: 6px;
-      padding: 8px 14px;
-      font-size: 14px;
-      background: #222;
-      color: #f6f6f6;
-      border: 1px solid #555;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-    .card-container {
-      margin: 80px auto;
-      padding: 20px;
-      max-width: 1200px;
-    }
-    .card {
-      background: #1a1a1a;
-      border: 1px solid #333;
-      border-radius: 8px;
-      padding: 20px;
-      font-size: 16px;
-      color: #ffd;
-      box-shadow: 0 0 6px #000;
-    }
-
-    /* GRID 模式：田字型排版 */
-    .layout-grid .card-container {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 24px;
-    }
-
-    /* LIST 模式：垂直堆疊 */
-    .layout-list .card-container {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
-
-    /* SCROLL 模式：橫向滑動 */
-    .layout-scroll .card-container {
-      display: flex;
-      flex-direction: row;
-      overflow-x: auto;
-      gap: 20px;
-      scroll-behavior: smooth;
-    }
-    .layout-scroll .card {
-      min-width: 280px;
-      flex-shrink: 0;
-    }
-  </style>
+  <title>MCP 控制台</title>
+  <link rel="stylesheet" href="styles.css" />
 </head>
 
-<body>
+<body class="layout-grid">
   <!-- 懸浮排版選單 -->
   <div class="layout-panel">
     <button data-layout="grid">🧊 Grid 模式</button>
@@ -79,29 +15,14 @@
     <button data-layout="scroll">🔃 Scroll 模式</button>
   </div>
 
-  <!-- 卡片容器 -->
+  <!-- 卡片容器區塊 -->
   <div class="card-container">
     <div class="card">🚀 Alpha-X · 加密分析模組</div>
     <div class="card">🧠 Nova-Y · 自動化指標模組</div>
     <div class="card">🎴 Omega-Z · 收藏 NFT 卡片</div>
   </div>
 
-  <script>
-    function setLayout(mode) {
-      document.body.classList.remove("layout-grid", "layout-list", "layout-scroll");
-      document.body.classList.add("layout-" + mode);
-      localStorage.setItem("layoutMode", mode);
-    }
-
-    function initLayoutPanel() {
-      const saved = localStorage.getItem("layoutMode") || "grid";
-      setLayout(saved);
-      document.querySelectorAll("[data-layout]").forEach(button => {
-        button.onclick = () => setLayout(button.dataset.layout);
-      });
-    }
-
-    window.onload = initLayoutPanel;
-  </script>
+  <!-- 排版切換腳本模組 -->
+  <script src="src/layout-toggle.js"></script>
 </body>
 </html>
