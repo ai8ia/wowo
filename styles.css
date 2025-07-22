@@ -114,6 +114,31 @@ body {
   box-shadow: 0 0 16px rgba(255,255,160,0.25);
 }
 
+/* 🌌 銀河主題擴充 */
+.theme-galaxy #recommended-list .card,
+.theme-galaxy #token-list .card {
+  background: #1f1f2b;
+  color: #ffd;
+  box-shadow: 0 0 18px rgba(120,180,255,0.25);
+}
+
+/* 🛰️ 艦橋主題擴充 */
+.theme-bridge #recommended-list .card,
+.theme-bridge #token-list .card {
+  background: #232536;
+  color: #cfc;
+  box-shadow: 0 0 16px rgba(0,255,200,0.2);
+}
+
+/* 🧬 晶片主題擴充 */
+.theme-chip #recommended-list .card,
+.theme-chip #token-list .card {
+  background: #262626;
+  color: #fcfccc;
+  box-shadow: 0 0 16px rgba(255,255,160,0.25);
+}
+
+
 /* 🔎 搜尋列樣式 */
 .search-bar {
   width: 100%;
