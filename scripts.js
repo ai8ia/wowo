@@ -76,7 +76,7 @@ async function fetchLocalData() {
     const tokens = await res.json();
     window.tokensData = tokens;
     render(tokens);
-    import { checkAlerts } from "./src/alert.js";  
+    
 checkAlerts(tokens);
 
     DOM.loading.textContent = "";
