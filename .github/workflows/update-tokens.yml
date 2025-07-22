@@ -2,7 +2,7 @@ name: 更新代幣資料
 
 on:
   schedule:
-    - cron: '0 1 * * *' # 每天 01:00 UTC 執行
+    - cron: '*/15 * * * *' # 每天 01:00 UTC 執行
   workflow_dispatch:
 
 permissions:
