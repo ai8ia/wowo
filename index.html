@@ -38,6 +38,13 @@
       });
     }
 
+
+    <section class="mt-6 text-xs text-gray-500 text-center">
+  <p id="update-time">📡 資料更新時間：載入中...</p>
+  <p>📁 資料來源：<strong>tokens.json</strong>（由 GitHub Actions 自動更新，每 15 分鐘）</p>
+</section>
+
+    
     function calcScore(volume, change) {
       const v = Math.min(volume / 1e9, 2);
       const c = change / 5;
