@@ -20,6 +20,7 @@ const axios = require("axios");
     }));
 
     fs.writeFileSync("tokens.json", JSON.stringify(tokens, null, 2));
+    console.log(`✅ 已儲存 ${tokens.length} 筆幣種資料到 tokens.json`);
 
     const version = {
       version: `v${new Date().toISOString().slice(0, 10).replace(/-/g, ".")}`,
@@ -28,8 +29,9 @@ const axios = require("axios");
       generatedBy: "GitHub Actions"
     };
     fs.writeFileSync("version.json", JSON.stringify(version, null, 2));
+    console.log("🧬 version.json 已產生");
   } catch (err) {
-    console.error("❌ 資料更新失敗", err.message);
+    console.error("❌ 錯誤：無法抓取幣種資料", err.message);
     process.exit(1);
   }
 })();
