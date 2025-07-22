@@ -86,6 +86,14 @@
   color: #fff;
 }
 
+.layout-grid .card-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 24px;
+  padding: 40px 20px;
+}
+
+
 /* 📦 一般卡片與推薦卡樣式 */
 .card, .recommend-card {
   background: #111;
