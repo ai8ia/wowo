@@ -1,4 +1,4 @@
-// 🔧 推薦分數計算模組
+// ✅ 推薦分數計算模組
 function calcScore(t) {
   const volScore = Math.log10(t.volume + 1) * 2;
   const changeScore = t.changePct * 3;
@@ -6,7 +6,7 @@ function calcScore(t) {
   return Math.round(volScore + changeScore + priceScore);
 }
 
-// 🌟 推薦星級顯示
+// 🌟 推薦星級生成
 function generateStars(score) {
   if (score >= 180) return "★★★★★";
   if (score >= 140) return "★★★★";
@@ -26,12 +26,39 @@ function playSound(type) {
   }
 }
 
-// ✅ 自動推薦卡片渲染模組
+// ✅ 所有代幣清單渲染
 fetch("tokens.json")
-  .then(res => {
-    if (!res.ok) throw new Error("載入失敗：" + res.status);
-    return res.json();
+  .then(res => res.json())
+  .then(tokens => {
+    const list = document.getElementById("token-list");
+    if (!list) return console.warn("❌ token-list 容器不存在");
+
+    list.innerHTML = "";
+    tokens.forEach(t => {
+      if (!t.name || !t.price || !t.changePct || !t.volume) return;
+      const priceColor = t.changePct >= 0 ? "price-up" : "price-down";
+      const item = document.createElement("div");
+      item.className = "token-item";
+      item.innerHTML = `
+        <h4>${t.name} (${t.symbol})</h4>
+        <p class="${priceColor}">💰 $${t.price.toFixed(2)}</p>
+        <p>📈 ${t.changePct.toFixed(2)}%</p>
+        <p>📦 ${(t.volume / 1e9).toFixed(2)}B</p>
+      `;
+      list.appendChild(item);
+    });
   })
+  .catch(err => {
+    console.error("❌ 所有代幣載入失敗：", err.message);
+    const list = document.getElementById("token-list");
+    if (list) {
+      list.innerHTML = `<p style="color:#f88;">🚫 無法載入代幣清單：${err.message}</p>`;
+    }
+  });
+
+// ✅ 推薦卡片自動渲染（前 30 名高分幣種）
+fetch("tokens.json")
+  .then(res => res.json())
   .then(tokens => {
     const deck = document.getElementById("deckCards");
     if (!deck) return console.warn("❌ deckCards 容器不存在");
@@ -41,7 +68,7 @@ fetch("tokens.json")
       .sort((a, b) => b.score - a.score)
       .slice(0, 30);
 
-    deck.innerHTML = ""; // 清空舊卡片
+    deck.innerHTML = "";
 
     recommended.forEach(token => {
       const priceColor = token.changePct >= 0 ? "price-up" : "price-down";
@@ -53,7 +80,7 @@ fetch("tokens.json")
         <p class="token-price ${priceColor}">💰 價格：$${token.price.toFixed(2)}</p>
         <p>📈 漲跌：${token.changePct.toFixed(2)}%</p>
         <p>📦 成交量：$${(token.volume / 1e9).toFixed(2)}B</p>
-        <p>⭐ 推薦分數：${token.score}</p>
+        <p>⭐ 推薦分數：<strong>${token.score}</strong></p>
         <button class="btn-collect">收藏 🔒</button>
       `;
       card.querySelector(".btn-collect").addEventListener("click", () => {
@@ -63,14 +90,14 @@ fetch("tokens.json")
     });
   })
   .catch(err => {
-    console.error("🚨 自動推薦錯誤：", err.message);
+    console.error("❌ 推薦載入失敗：", err.message);
     const deck = document.getElementById("deckCards");
     if (deck) {
-      deck.innerHTML = `<p style="color:#f88;">❌ 無法載入自動推薦資料：${err.message}</p>`;
+      deck.innerHTML = `<p style="color:#f88;">🚫 無法載入推薦資料：${err.message}</p>`;
     }
   });
 
-// ✅ 推薦引擎版本渲染
+// ✅ 推薦引擎版本狀態顯示
 fetch("version.json")
   .then(res => res.json())
   .then(version => {
