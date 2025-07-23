@@ -48,6 +48,31 @@ fetch("tokens.json")
     soundDeck.init();
   });
 
+fetch("version.json")
+  .then(res => res.json())
+  .then(version => {
+    const status = version.recommendation?.status || "未啟動";
+    const time = version.recommendation?.lastUpdate?.slice(0, 16).replace("T", " ");
+    document.getElementById("missionStatus").innerHTML = `
+      <p>🧠 推薦引擎版本：<strong>${version.recommendation.version}</strong></p>
+      <p>🕒 最近更新時間：${time}</p>
+      <p>📣 狀態：${status}</p>
+    `;
+  });
+
+fetch("recommend.json")
+  .then(res => res.json())
+  .then(data => {
+    const summary = document.getElementById("missionSummary");
+    data.forEach(token => {
+      const li = document.createElement("li");
+      li.innerHTML = `✅ <strong>${token.symbol}</strong>｜${token.category}｜${token.reason}`;
+      summary.appendChild(li);
+    });
+  });
+
+
+
 function render(tokens) {
   const grid = document.getElementById("token-list");
   const recommend = document.getElementById("recommended-list");
