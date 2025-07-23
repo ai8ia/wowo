@@ -9,47 +9,46 @@
 </head>
 <body class="layout-grid">
 
+  <!-- 🧭 主標題 -->
   <header class="text-center py-6">
     <img src="assets/mcp-logo.svg" alt="MCP Logo" class="logo" />
     <h1 class="text-2xl font-bold text-yellow-300 mt-2">🧠 MCP 控制台 v2.3</h1>
     <p class="text-sm text-gray-400">推薦艦橋 · 加密分析 · 自動化更新 · 收藏模組</p>
   </header>
 
-  <!-- 🧊 排版選單 -->
+  <!-- 🎴 排版切換 -->
   <div class="layout-panel" style="position: fixed; top: 20px; right: 20px; z-index: 999;">
     <button data-layout="grid">🧊 Grid</button>
     <button data-layout="list">📋 List</button>
     <button data-layout="scroll">🔃 Scroll</button>
   </div>
 
-  <!-- 🎨 主題選單 -->
+  <!-- 🌌 主題選擇 -->
   <div class="theme-panel" style="position: fixed; bottom: 20px; right: 20px; z-index: 999;">
     <button data-theme="galaxy">🌌 銀河</button>
-    <button data-theme="bridge">🛰️ 艦橋</button>
+    <button data-theme="bridge">🛠️ 艦橋</button>
     <button data-theme="chip">🧬 晶片</button>
   </div>
 
-  <!-- 🔎 搜尋欄 -->
+  <!-- 🔍 搜尋列 + 卡片渲染區 -->
   <main class="max-w-4xl mx-auto px-4">
     <input type="text" id="search" placeholder="🔍 搜尋幣種名稱或代號" class="search-bar" />
 
-    <!-- 🚀 推薦幣種 -->
     <section class="mt-6">
       <h2 class="section-title">🚀 推薦幣種</h2>
       <div id="recommended-list"></div>
     </section>
 
-    <!-- 📊 所有代幣 -->
     <section class="mt-6">
-      <h2 class="section-title">📊 所有代幣</h2>
+      <h2 class="section-title">📈 所有代幣</h2>
       <div id="token-list"></div>
     </section>
 
-    <!-- 🎴 收藏艦橋 -->
+    <!-- 🧲 收藏區 -->
     <section class="mt-8">
       <h2 class="text-yellow-400 text-xl font-bold">🎴 我的收藏艦橋</h2>
       <select id="theme-selector" style="margin:12px;">
-        <option value="starship">🛰️ 星艦型</option>
+        <option value="starship">🚀 星艦型</option>
         <option value="retro">💾 資料磁片型</option>
         <option value="chip">🧬 AI 晶片型</option>
       </select>
@@ -57,38 +56,35 @@
       <div id="favorites-deck" class="nft-grid"></div>
     </section>
 
-    <!-- 🔄 畫面狀態提示 -->
-    <section id="status" class="mt-6 text-xs text-center text-gray-500">
-      🧩 畫面模式：Grid（已啟動）
-    </section>
+    <!-- 🛰️ 狀態 / 版本 -->
+    <section id="status" class="mt-6 text-xs text-center text-gray-500">🛰️ 畫面模式：Grid（已啟動）</section>
+    <section id="version-info" class="mt-3 text-xs text-gray-500 text-center"><p>🧬 正在解析版本資訊…</p></section>
 
-    <!-- 🧬 版本區 -->
-    <section id="version-info" class="mt-3 text-xs text-gray-500 text-center">
-      <p>🧬 正在解析版本資訊…</p>
-    </section>
-
+    <!-- 📜 資料載入提示 -->
     <section id="loading" class="mt-3 text-center text-sm text-gray-500"></section>
+    <div id="loadError" class="mt-2 text-center text-red-400 text-sm"></div>
 
-   <div class="sound-panel" style="text-align:center; margin-top:24px;">
-  <button onclick="soundDeck.setVolume(soundDeck.volume + 0.1)">🔊 加大音量</button>
-  <button onclick="soundDeck.setVolume(soundDeck.volume - 0.1)">🔉 降低音量</button>
-  <button onclick="soundDeck.mute()">🔇 靜音</button>
-  <button onclick="soundDeck.unmute()">🔔 解除靜音</button>
-  <button onclick="soundDeck.stop()">⛔ 停止播放</button>
-</div>
+    <!-- 🔊 音效控制 -->
+    <div class="sound-panel" style="text-align:center; margin-top:24px;">
+      <button onclick="soundDeck.setVolume(soundDeck.volume + 0.1)">🔊 加大音量</button>
+      <button onclick="soundDeck.setVolume(soundDeck.volume - 0.1)">🔉 降低音量</button>
+      <button onclick="soundDeck.mute()">🔇 靜音</button>
+      <button onclick="soundDeck.unmute()">🔔 解除靜音</button>
+      <button onclick="soundDeck.stop()">⛔ 停止播放</button>
+    </div>
 
+    <!-- 📦 推薦卡片與任務資訊 -->
     <div id="deckCards"></div>
-<ul id="missionSummary"></ul>
-<div id="missionStatus"></div>
-
+    <ul id="missionSummary"></ul>
+    <div id="missionStatus"></div>
   </main>
 
-  <!-- 👾 Footer 區塊 -->
+  <!-- 👾 Footer 區 -->
   <footer class="text-center mt-12 mb-6 text-xs text-gray-400">
     <p>👾 Powered by MCP Deck · GitHub Actions · CoinGecko API</p>
   </footer>
 
-  <!-- 🔧 模組載入順序 -->
+  <!-- 🧠 模組載入順序 -->
   <script src="scripts.js"></script>
   <script src="src/alert.js"></script>
   <script src="src/homepage-branding.js"></script>
