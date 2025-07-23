@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <title>MCP 收藏艦隊總覽</title>
+  <style>
+    body {
+      background: radial-gradient(circle at center, #1d1d2e, #111);
+      color: #f2f2f2;
+      font-family: 'Segoe UI', sans-serif;
+      padding: 2em;
+    }
+
+    .fleet-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 1.5em;
+    }
+
+    .fleet-card {
+      background: #222;
+      border-radius: 12px;
+      padding: 1em;
+      box-shadow: 0 0 12px rgba(255, 255, 255, 0.05);
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.3s ease;
+    }
+
+    .fleet-card:hover {
+      transform: scale(1.03);
+    }
+
+    .persona-tag {
+      position: absolute;
+      top: -12px;
+      right: -12px;
+      background: #444;
+      padding: 0.5em 1em;
+      border-radius: 8px;
+      font-size: 0.85em;
+      box-shadow: 0 0 6px #888;
+    }
+
+    .glow-high { box-shadow: 0 0 18px #ff9800; }
+    .glow-mid { box-shadow: 0 0 10px #00bcd4; }
+    .glow-low { box-shadow: 0 0 4px #999; }
+
+    .timestamp {
+      font-size: 0.85em;
+      color: #aaa;
+      margin-top: 0.5em;
+    }
+
+    .empty-message {
+      text-align: center;
+      margin-top: 3em;
+      font-size: 1.1em;
+      opacity: 0.8;
+    }
+  </style>
+</head>
+<body>
+  <h1>🌌 MCP 收藏艦隊總覽</h1>
+  <section class="fleet-grid" id="fleetDeck"></section>
+  <p class="empty-message" id="fleetEmpty" style="display:none;">🚫 尚未收藏任何幣種推薦。</p>
+
+  <script>
+    function loadFleet() {
+      const data = localStorage.recommendFleet;
+      const deck = document.getElementById("fleetDeck");
+      const empty = document.getElementById("fleetEmpty");
+
+      if (!data || !deck) {
+        empty.style.display = "block";
+        return;
+      }
+
+      const fleet = JSON.parse(data);
+      if (fleet.length === 0) {
+        empty.style.display = "block";
+        return;
+      }
+
+      empty.style.display = "none";
+      deck.innerHTML = "";
+
+      fleet.forEach(t => {
+        const glowClass = `glow-${(t.glowLevel ?? "low").toLowerCase()}`;
+        const ts = new Date(t.timestamp ?? Date.now()).toLocaleString();
+
+        const card = document.createElement("div");
+        card.className = `fleet-card ${glowClass}`;
+        card.innerHTML = `
+          <div class="persona-tag">${t.persona ?? "🌀 未分類"}</div>
+          <h3>${t.name ?? "未命名"} (${t.symbol ?? "?"})</h3>
+          <p>💰 價格：$${typeof t.price === "number" ? t.price.toFixed(2) : "N/A"}</p>
+          <p>⭐ 分數：${t.score ?? "未計算"}</p>
+          <p class="timestamp">🕒 收藏時間：${ts}</p>
+        `;
+
+        deck.appendChild(card);
+      });
+    }
+
+    window.onload = loadFleet;
+  </script>
+</body>
+</html>
