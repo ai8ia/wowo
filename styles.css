@@ -80,6 +80,24 @@ body {
   box-shadow: 0 0 12px rgba(255,255,160,0.6);
 }
 
+.mission-panel {
+  background: rgba(0,0,0,0.6);
+  padding: 1.5rem;
+  border-radius: 12px;
+  color: #fff;
+  box-shadow: 0 0 12px rgba(255,255,255,0.2);
+}
+.mission-panel ul {
+  list-style: none;
+  padding-left: 0;
+}
+.mission-panel li {
+  margin: 0.5rem 0;
+  padding-left: 1rem;
+  border-left: 3px solid #66f;
+}
+
+
 /* 🎨 主題背景樣式 */
 .theme-galaxy body {
   background: radial-gradient(circle at top, #121229, #0d0d1a);
