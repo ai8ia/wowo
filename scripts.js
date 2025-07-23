@@ -1,8 +1,8 @@
 // ✅ 推薦分數計算模組
 function calcScore(t) {
-  const volScore = Math.log10(t.volume + 1) * 2;
-  const changeScore = t.changePct * 3;
-  const priceScore = Math.log10(t.price + 1);
+  const volScore = Math.log10((t.volume ?? 0) + 1) * 2;
+  const changeScore = (t.changePct ?? 0) * 3;
+  const priceScore = Math.log10((t.price ?? 0) + 1);
   return Math.round(volScore + changeScore + priceScore);
 }
 
@@ -32,18 +32,23 @@ fetch("tokens.json")
   .then(tokens => {
     const list = document.getElementById("token-list");
     if (!list) return console.warn("❌ token-list 容器不存在");
-
     list.innerHTML = "";
+
     tokens.forEach(t => {
-      if (!t.name || !t.price || !t.changePct || !t.volume) return;
+      const name = t.name ?? "未命名";
+      const symbol = t.symbol ?? "?";
+      const price = typeof t.price === "number" ? `$${t.price.toFixed(2)}` : "N/A";
+      const change = typeof t.changePct === "number" ? `${t.changePct.toFixed(2)}%` : "未知";
+      const volume = typeof t.volume === "number" ? `${(t.volume / 1e9).toFixed(2)}B` : "未知";
+
       const priceColor = t.changePct >= 0 ? "price-up" : "price-down";
       const item = document.createElement("div");
       item.className = "token-item";
       item.innerHTML = `
-        <h4>${t.name} (${t.symbol})</h4>
-        <p class="${priceColor}">💰 $${t.price.toFixed(2)}</p>
-        <p>📈 ${t.changePct.toFixed(2)}%</p>
-        <p>📦 ${(t.volume / 1e9).toFixed(2)}B</p>
+        <h4>${name} (${symbol})</h4>
+        <p class="${priceColor}">💰 ${price}</p>
+        <p>📈 ${change}</p>
+        <p>📦 ${volume}</p>
       `;
       list.appendChild(item);
     });
@@ -64,6 +69,7 @@ fetch("tokens.json")
     if (!deck) return console.warn("❌ deckCards 容器不存在");
 
     const recommended = tokens
+      .filter(t => typeof t.price === "number" && typeof t.volume === "number" && typeof t.changePct === "number")
       .map(t => ({ ...t, score: calcScore(t) }))
       .sort((a, b) => b.score - a.score)
       .slice(0, 30);
@@ -71,16 +77,24 @@ fetch("tokens.json")
     deck.innerHTML = "";
 
     recommended.forEach(token => {
+      const name = token.name ?? "未命名";
+      const symbol = token.symbol ?? "?";
+      const scoreText = typeof token.score === "number" ? token.score : "未計算";
+      const stars = generateStars(scoreText);
+      const price = `$${token.price.toFixed(2)}`;
+      const change = `${token.changePct.toFixed(2)}%`;
+      const volume = `$${(token.volume / 1e9).toFixed(2)}B`;
       const priceColor = token.changePct >= 0 ? "price-up" : "price-down";
+
       const card = document.createElement("div");
       card.className = "recommend-card theme-starship";
       card.innerHTML = `
-        <div class="star-tier">${generateStars(token.score)}</div>
-        <h3>${token.name} (${token.symbol})</h3>
-        <p class="token-price ${priceColor}">💰 價格：$${token.price.toFixed(2)}</p>
-        <p>📈 漲跌：${token.changePct.toFixed(2)}%</p>
-        <p>📦 成交量：$${(token.volume / 1e9).toFixed(2)}B</p>
-        <p>⭐ 推薦分數：<strong>${token.score}</strong></p>
+        <div class="star-tier">${stars}</div>
+        <h3>${name} (${symbol})</h3>
+        <p class="token-price ${priceColor}">💰 價格：${price}</p>
+        <p>📈 漲跌：${change}</p>
+        <p>📦 成交量：${volume}</p>
+        <p>⭐ 推薦分數：<strong>${scoreText}</strong></p>
         <button class="btn-collect">收藏 🔒</button>
       `;
       card.querySelector(".btn-collect").addEventListener("click", () => {
