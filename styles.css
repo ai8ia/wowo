@@ -198,4 +198,28 @@ footer {
   0%, 100% { color: #ffffff; }
   50% { color: #ff6666; }
 }
+.token-price {
+  font-weight: bold;
+  transition: color 0.5s ease;
+}
+
+.price-up {
+  color: #00ff99;
+  animation: flashUp 1.2s ease-in-out;
+}
+
+.price-down {
+  color: #ff6666;
+  animation: flashDown 1.2s ease-in-out;
+}
+
+@keyframes flashUp {
+  0%, 100% { color: #ffffff; }
+  50% { color: #00ff99; }
+}
+
+@keyframes flashDown {
+  0%, 100% { color: #ffffff; }
+  50% { color: #ff6666; }
+}
 
