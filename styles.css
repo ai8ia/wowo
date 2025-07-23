@@ -7,44 +7,21 @@ body {
   padding: 0;
 }
 
-/* 🎴 主要排版容器統一控制 */
-.layout-grid .card-container,
-.layout-grid #recommended-list,
-.layout-grid #token-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 24px;
-  padding: 24px;
+/* 🧩 主題選擇擴充（銀河／晶片／橋） */
+.theme-galaxy body {
+  background: radial-gradient(circle at top, #121229, #0d0d1a);
+  color: #f2f2f2;
+}
+.theme-bridge body {
+  background: linear-gradient(135deg, #1d1e2f, #292c3c);
+  color: #eee;
+}
+.theme-chip body {
+  background: linear-gradient(to bottom, #0d0d0d, #1a1a1a);
+  color: #ffffcc;
 }
 
-.layout-list .card-container,
-.layout-list #recommended-list,
-.layout-list #token-list {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  padding: 24px;
-}
-
-.layout-scroll .card-container,
-.layout-scroll #recommended-list,
-.layout-scroll #token-list {
-  display: flex;
-  flex-direction: row;
-  gap: 16px;
-  overflow-x: auto;
-  scroll-behavior: smooth;
-  padding: 24px;
-}
-
-.layout-scroll .card,
-.layout-scroll #recommended-list .card,
-.layout-scroll #token-list .card {
-  min-width: 280px;
-  flex-shrink: 0;
-}
-
-/* 🧊 卡片樣式與 Glow 動效 */
+/* 🎴 卡片樣式與 Glow 動效 */
 .card {
   background: #1a1a2a;
   color: #ffd;
@@ -53,13 +30,48 @@ body {
   box-shadow: 0 0 18px rgba(120,180,255,0.15);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
-
 .card:hover {
   transform: scale(1.04);
   box-shadow: 0 0 28px rgba(140,220,255,0.4);
 }
+.theme-galaxy .card {
+  background: #1f1f2b;
+  box-shadow: 0 0 18px rgba(120,180,255,0.25);
+}
+.theme-bridge .card {
+  background: #232536;
+  color: #cfc;
+  box-shadow: 0 0 16px rgba(0,255,200,0.2);
+}
+.theme-chip .card {
+  background: #262626;
+  color: #fcfccc;
+  box-shadow: 0 0 16px rgba(255,255,160,0.25);
+}
 
-/* 🧭 排版與主題選單按鈕 */
+/* 🧠 推薦價格動畫樣式 */
+.token-price {
+  font-weight: bold;
+  transition: color 0.5s ease;
+}
+.price-up {
+  color: #00ff99;
+  animation: flashUp 1.2s ease-in-out;
+}
+.price-down {
+  color: #ff6666;
+  animation: flashDown 1.2s ease-in-out;
+}
+@keyframes flashUp {
+  0%, 100% { color: #ffffff; }
+  50% { color: #00ff99; }
+}
+@keyframes flashDown {
+  0%, 100% { color: #ffffff; }
+  50% { color: #ff6666; }
+}
+
+/* 🎛️ 主題／排版按鈕樣式 */
 .layout-panel button,
 .theme-panel button {
   background-color: #202030;
@@ -73,13 +85,17 @@ body {
   cursor: pointer;
   transition: box-shadow 0.3s ease, background-color 0.3s ease;
 }
-
 .layout-panel button:hover,
 .theme-panel button:hover {
   background-color: #2f2f40;
   box-shadow: 0 0 12px rgba(255,255,160,0.6);
 }
+.active-layout {
+  background-color: #3a3a5a;
+  box-shadow: 0 0 12px rgba(255,255,200,0.6);
+}
 
+/* 📡 推薦任務面板 */
 .mission-panel {
   background: rgba(0,0,0,0.6);
   padding: 1.5rem;
@@ -97,72 +113,41 @@ body {
   border-left: 3px solid #66f;
 }
 
-
-/* 🎨 主題背景樣式 */
-.theme-galaxy body {
-  background: radial-gradient(circle at top, #121229, #0d0d1a);
-  color: #f2f2f2;
+/* 📦 Scroll / Grid / List 排版支援 */
+.layout-grid .card-container,
+.layout-grid #recommended-list,
+.layout-grid #token-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 24px;
+  padding: 24px;
+}
+.layout-list .card-container,
+.layout-list #recommended-list,
+.layout-list #token-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 24px;
+}
+.layout-scroll .card-container,
+.layout-scroll #recommended-list,
+.layout-scroll #token-list {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  padding: 24px;
+}
+.layout-scroll .card,
+.layout-scroll #recommended-list .card,
+.layout-scroll #token-list .card {
+  min-width: 280px;
+  flex-shrink: 0;
 }
 
-.theme-bridge body {
-  background: linear-gradient(135deg, #1d1e2f, #292c3c);
-  color: #eee;
-}
-
-.theme-chip body {
-  background: linear-gradient(to bottom, #0d0d0d, #1a1a1a);
-  color: #ffffcc;
-}
-
-/* 🎨 主題卡片樣式 */
-.theme-galaxy .card {
-  background: #1f1f2b;
-  box-shadow: 0 0 18px rgba(120,180,255,0.25);
-}
-
-.theme-bridge .card {
-  background: #232536;
-  color: #cfc;
-  box-shadow: 0 0 16px rgba(0,255,200,0.2);
-}
-
-.theme-chip .card {
-  background: #262626;
-  color: #fcfccc;
-  box-shadow: 0 0 16px rgba(255,255,160,0.25);
-}
-
-/* 🌌 銀河主題擴充 */
-.theme-galaxy #recommended-list .card,
-.theme-galaxy #token-list .card {
-  background: #1f1f2b;
-  color: #ffd;
-  box-shadow: 0 0 18px rgba(120,180,255,0.25);
-}
-
-/* 🛰️ 艦橋主題擴充 */
-.theme-bridge #recommended-list .card,
-.theme-bridge #token-list .card {
-  background: #232536;
-  color: #cfc;
-  box-shadow: 0 0 16px rgba(0,255,200,0.2);
-}
-
-/* 🧬 晶片主題擴充 */
-.theme-chip #recommended-list .card,
-.theme-chip #token-list .card {
-  background: #262626;
-  color: #fcfccc;
-  box-shadow: 0 0 16px rgba(255,255,160,0.25);
-}
-
-.active-layout {
-  background-color: #3a3a5a;
-  box-shadow: 0 0 12px rgba(255,255,200,0.6);
-}
-
-
-/* 🔎 搜尋列樣式 */
+/* 🔍 搜尋列 */
 .search-bar {
   width: 100%;
   padding: 12px 16px;
@@ -174,14 +159,14 @@ body {
   margin-bottom: 20px;
 }
 
-/* 📊 小標題樣式 */
+/* 📊 區塊標題 */
 .section-title {
   font-size: 18px;
   color: #ffeb80;
   margin-bottom: 10px;
 }
 
-/* 👾 Footer 樣式 */
+/* 👾 Footer */
 footer {
   text-align: center;
   margin: 40px 0;
