@@ -79,5 +79,47 @@
 
     init();
   </script>
+
+<script>
+fetch("recommend.json")
+  .then(res => res.json())
+  .then(data => {
+    const deck = document.getElementById("deckCards");
+    data.forEach(token => {
+      const card = document.createElement("div");
+      card.className = "recommend-card theme-starship";
+
+      card.innerHTML = `
+        <div class="star-tier">${generateStars(token.score)}</div>
+        <h3>${token.name}</h3>
+        <p>分數：${token.score}｜漲幅：${token.changePct}%｜成交量：$${(token.volume/1e9).toFixed(1)}B</p>
+        <button class="btn-collect">收藏 🔒</button>
+        <div class="reason-tooltip">${token.reason}</div>
+      `;
+
+      card.querySelector(".btn-collect").addEventListener("click", () => {
+        playSound("collect");
+      });
+
+      deck.appendChild(card);
+    });
+  });
+
+function generateStars(score) {
+  if (score >= 180) return "★★★★★";
+  if (score >= 140) return "★★★★";
+  if (score >= 100) return "★★★";
+  return "★★";
+}
+
+function playSound(type) {
+  const sounds = {
+    collect: "assets/sounds/magnet_lock.mp3"
+  };
+  new Audio(sounds[type]).play();
+}
+</script>
+
+  
 </body>
 </html>
