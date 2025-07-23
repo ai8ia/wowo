@@ -1,4 +1,12 @@
-// ✅ 推薦卡片渲染模組
+// 🔧 推薦分數計算模組
+function calcScore(t) {
+  const volScore = Math.log10(t.volume + 1) * 2;
+  const changeScore = t.changePct * 3;
+  const priceScore = Math.log10(t.price + 1);
+  return Math.round(volScore + changeScore + priceScore);
+}
+
+// 🌟 推薦星級顯示
 function generateStars(score) {
   if (score >= 180) return "★★★★★";
   if (score >= 140) return "★★★★";
@@ -6,6 +14,7 @@ function generateStars(score) {
   return "★★";
 }
 
+// 🔊 音效播放模組
 function playSound(type) {
   const sounds = {
     collect: "assets/sounds/magnet_lock.mp3"
@@ -17,42 +26,56 @@ function playSound(type) {
   }
 }
 
-// ✅ 每日推薦卡片渲染
-fetch("recommend.json")
-  .then(res => res.json())
-  .then(data => {
+// ✅ 自動推薦卡片渲染模組
+fetch("tokens.json")
+  .then(res => {
+    if (!res.ok) throw new Error("載入失敗：" + res.status);
+    return res.json();
+  })
+  .then(tokens => {
     const deck = document.getElementById("deckCards");
-    data.forEach(token => {
+    if (!deck) return console.warn("❌ deckCards 容器不存在");
+
+    const recommended = tokens
+      .map(t => ({ ...t, score: calcScore(t) }))
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 30);
+
+    deck.innerHTML = ""; // 清空舊卡片
+
+    recommended.forEach(token => {
+      const priceColor = token.changePct >= 0 ? "price-up" : "price-down";
       const card = document.createElement("div");
       card.className = "recommend-card theme-starship";
-
-      const priceColor = token.changePct >= 0 ? "price-up" : "price-down";
-
       card.innerHTML = `
         <div class="star-tier">${generateStars(token.score)}</div>
-        <h3>${token.name}</h3>
+        <h3>${token.name} (${token.symbol})</h3>
         <p class="token-price ${priceColor}">💰 價格：$${token.price.toFixed(2)}</p>
         <p>📈 漲跌：${token.changePct.toFixed(2)}%</p>
         <p>📦 成交量：$${(token.volume / 1e9).toFixed(2)}B</p>
-        <p>🧬 類型：${token.persona}</p>
-        <p>🏷️ 分類：${token.category}</p>
-        <div class="reason-tooltip">${token.reason}</div>
+        <p>⭐ 推薦分數：${token.score}</p>
         <button class="btn-collect">收藏 🔒</button>
       `;
-
       card.querySelector(".btn-collect").addEventListener("click", () => {
-        playSound("collect"); // ✅ 僅在互動事件觸發音效
+        playSound("collect");
       });
-
       deck.appendChild(card);
     });
+  })
+  .catch(err => {
+    console.error("🚨 自動推薦錯誤：", err.message);
+    const deck = document.getElementById("deckCards");
+    if (deck) {
+      deck.innerHTML = `<p style="color:#f88;">❌ 無法載入自動推薦資料：${err.message}</p>`;
+    }
   });
 
-// ✅ 推薦任務面板渲染
+// ✅ 推薦引擎版本渲染
 fetch("version.json")
   .then(res => res.json())
   .then(version => {
     const panel = document.getElementById("missionStatus");
+    if (!panel) return;
     if (version?.recommendation) {
       const v = version.recommendation.version || "未標示";
       const time = version.recommendation.lastUpdate?.slice(0, 16).replace("T", " ");
