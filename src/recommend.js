@@ -1,7 +1,6 @@
-
 const fs = require("fs");
 
-// 設定推薦幣種資料
+// 原始資料
 const coins = [
   {
     symbol: "SOL",
@@ -26,7 +25,32 @@ const coins = [
   }
 ];
 
-// 輸出為 JSON 檔案
-fs.writeFileSync("recommend.json", JSON.stringify(coins, null, 2));
+// 分類函式
+function classify(token) {
+  if (token.score >= 9 && token.volume > 1_000_000_000) return "🔥 爆衝熱榜";
+  if (token.score >= 8.5 && token.volume > 500_000_000) return "🌊 穩健主流";
+  if (token.score >= 8.0) return "🧪 創意潛力";
+  return "🧊 觀察中";
+}
 
-console.log("✅ 已更新推薦資料：recommend.json");
+// 推薦理由生成器
+function generateReason(token) {
+  const reasons = [];
+  if (token.volume > 1_000_000_000) reasons.push("成交量暴增 🚀");
+  if (token.score >= 9) reasons.push("分數極高 🔥");
+  if (/pengu|ai|spark/i.test(token.symbol)) reasons.push("社群熱度高 🔊");
+  if (/om|lab|chain/i.test(token.symbol)) reasons.push("反轉題材活躍 ⚙️");
+
+  return reasons.length ? reasons.join(" + ") : "信號尚未明確，建議觀察 🧊";
+}
+
+// 加入分類與理由
+const enrichedCoins = coins.map(token => ({
+  ...token,
+  category: classify(token),
+  reason: generateReason(token)
+}));
+
+// 輸出為 JSON 檔案
+fs.writeFileSync("recommend.json", JSON.stringify(enrichedCoins, null, 2));
+console.log("✅ 已擴充推薦資料 recommend.json：含 category + reason");
