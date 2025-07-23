@@ -42,7 +42,7 @@ function classifyGlowLevel(volume) {
     });
 
     const tokens = res.data.map(t => {
-      const { id, name, symbol, total_volume, price_change_percentage_24h } = t;
+      const { id, name, symbol, current_price, total_volume, price_change_percentage_24h } = t;
       const volume = total_volume ?? 0;
       const change = price_change_percentage_24h ?? 0;
       const score = computeScore(volume, change);
@@ -54,6 +54,7 @@ function classifyGlowLevel(volume) {
         id,
         name,
         symbol: symbol.toUpperCase(),
+        price: current_price ?? 0,
         volume,
         price_change_percentage_24h: change,
         score,
