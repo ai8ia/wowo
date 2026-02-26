@@ -1,1 +1,23 @@
-自動生成内容
+# wowo Project - Auto Generated File
+# Language: Python (User Preference)
+# Created for: test.txt generation request
+
+def auto_generate_message():
+    """自動生成問候訊息"""
+    return "Hello! This file was auto-generated for you."
+
+def show_user_preference():
+    """顯示使用者偏好設定"""
+    preference = "Python"
+    return f"User favorite language: {preference}"
+
+def main():
+    print("=" * 40)
+    print(auto_generate_message())
+    print(show_user_preference())
+    print("=" * 40)
+    print("Status: File successfully created!")
+    print("Content: Auto-generated Python template")
+
+if __name__ == "__main__":
+    main()
